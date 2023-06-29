@@ -70,7 +70,7 @@ const ViewSubmissions = () => {
             console.log(response.data);
             setSubmissions(response.data.results);
             setIsLoading(false);
-        } catch (err) {
+        } catch (err: any | AxiosError) {
             if (err?.response?.status === 401)
                 setShowModal(true);
         }
