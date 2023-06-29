@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
-export default function LoginForm() {
+export default function LoginFormModal({ onClose }: any) {
     const [userId, setUserId] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -24,7 +24,7 @@ export default function LoginForm() {
             window.sessionStorage.setItem("access_token", loginResponse.data.tokens.access.token);
             window.sessionStorage.setItem("refresh_token", loginResponse.data.tokens.refresh.token);
             console.log(window.sessionStorage.getItem("access_token"));
-            navigate("/evaluate");
+            onClose();
         } catch (error) {
             setLoading(false);
             console.error("Error logging in:", error);
@@ -33,20 +33,18 @@ export default function LoginForm() {
     }
     return (
         <>
-            <header className="mt-10 text-center text-lg  leading-9 tracking-tight text-gray-900">
-                <h2> EMNLP 2023 EIGHTH CONFERENCE ON MACHINE TRANSLATION (WMT23)</h2>
-                <h2> Shared Task: Low-Resource Indic Language Translation</h2>
-                <h1 className="text-2xl font-bold"> Evaluation</h1>
-            </header>
-            <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-                <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+            <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-24">
+                <div className="sm:mx-auto sm:w-full sm:w-md">
 
-                    <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                    <h2 className="mt-10 text-center text-2xl font-semibold leading-9 tracking-tight text-gray-900">
                         Log in to your account
                     </h2>
+                    <p className="text-center   leading-9 tracking-tight  text-red-500 text-md">
+                        Log in expired
+                    </p>
                 </div>
 
-                <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                <div className="mt-10 sm:mx-auto sm:w-full sm:w-md">
                     <form className="space-y-6" onSubmit={handleUserLogin}>
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
@@ -94,8 +92,9 @@ export default function LoginForm() {
                             </button>
                         </div>
                         {errorMessage && (
-                            <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
+                            <p className="text-red-500 text-sm mt-2 ">{errorMessage}</p>
                         )}
+                        <div className="w-[20rem] h-1 bg-white"></div>
                     </form>
                 </div>
             </div>
