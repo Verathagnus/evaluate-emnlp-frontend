@@ -159,7 +159,7 @@ const ViewSubmissionsAdmin = () => {
             {
                 Header: 'Date Submitted',
                 accessor: 'dateCreated',
-                Cell: ({ value }) => new Date(value).toLocaleString(),
+                Cell: ({ value }: any) => new Date(value).toLocaleString(),
             },
         ],
         []

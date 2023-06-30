@@ -169,14 +169,11 @@ const ViewCredentialsAdmin = () => {
                             onChange={handleSortTypeChange}
                         >
                             <option value="">Sort By</option>
-                            <option value="teamName">Team Name</option>
-                            <option value="credentialType">Credential Type</option>
-                            <option value="languageDirection">Language Direction</option>
-                            <option value="BLEU">BLEU</option>
-                            <option value="Chrf2">Chrf2</option>
-                            <option value="ribes_score">RIBES</option>
-                            <option value="ter_score">TER</option>
-                            <option value="dateCreated">Date Submitted</option>
+                            <option value="id">User Id</option>
+                            <option value="name">Name</option>
+                            <option value="email">Email</option>
+                            <option value="role">Role</option>
+
                             {/* Add more sort options if needed */}
                         </select>
                     </div>

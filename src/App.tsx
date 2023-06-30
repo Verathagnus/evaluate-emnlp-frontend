@@ -6,9 +6,10 @@ import './App.css'
 import { Link, Outlet, Route, Routes } from "react-router-dom";
 import AdminNavbar from './components/admin-navbar';
 import ViewSubmissions from './components/view-submissions';
-import ViewSubmissionsAdmin from './components/view-submissions-admin';
-import ViewCredentialsAdmin from './components/view-credentials-admin';
+import ViewSubmissionsAdmin from './components/admin-view-submissions';
+import ViewCredentialsAdmin from './components/admin-view-credentials';
 import AdminHome from './components/admin-home';
+import EditReferencesAdmin from './components/admin-edit-references';
 
 const App: React.FC = () => {
   return (
@@ -23,7 +24,7 @@ const App: React.FC = () => {
           <Route path="home" element={<AdminHome />} />
           <Route path="submissions" element={<ViewSubmissionsAdmin />} />
           <Route path="credentials" element={<ViewCredentialsAdmin />} />
-          <Route path="references" element={<ViewCredentialsAdmin />} />
+          <Route path="references" element={<EditReferencesAdmin />} />
         </Route>
       </Routes>
     </main>
