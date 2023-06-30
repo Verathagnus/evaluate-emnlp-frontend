@@ -2,7 +2,7 @@ import React from "react";
 import {
   useTable,
   useFilters,
-  useGlobalFilter,
+  // useGlobalFilter,
   useAsyncDebounce,
   useSortBy,
   usePagination,
@@ -279,15 +279,16 @@ function Table({ columns, data }: any) {
     setPageSize,
 
     state,
-    preGlobalFilteredRows,
-    setGlobalFilter,
+    // preGlobalFilteredRows,
+    // setGlobalFilter,
   } = useTable(
     {
       columns,
       data,
+      initialState: {pageSize: Number.MAX_SAFE_INTEGER} as any
     },
     useFilters, // useFilters!
-    useGlobalFilter,
+    // useGlobalFilter,
     useSortBy,
     usePagination // new
   ) as any;
@@ -296,11 +297,11 @@ function Table({ columns, data }: any) {
   return (
     <div className="max-w-[1180px] mx-auto relative">
       <div className="sm:flex sm:gap-x-2">
-        <GlobalFilter
+        {/* <GlobalFilter
           preGlobalFilteredRows={preGlobalFilteredRows}
           globalFilter={state.globalFilter}
           setGlobalFilter={setGlobalFilter}
-        />
+        /> */}
         {headerGroups.map((headerGroup: any) =>
           headerGroup.headers.map((column: any) =>
             column.Filter ? (
@@ -427,14 +428,11 @@ function Table({ columns, data }: any) {
                   setPageSize(Number(e.target.value));
                 }}
               >
-                {[5, 10, 20].map((pageSize) => (
+                {[Number.MAX_SAFE_INTEGER, 5, 10, 20].map((pageSize) => (
                   <option key={pageSize} value={pageSize}>
-                    Show {pageSize}
+                    Show {pageSize === Number.MAX_SAFE_INTEGER ? "All" : pageSize}
                   </option>
                 ))}
-                <option key="All" value={data.length}>
-                  Show All
-                </option>
               </select>
             </label>
           </div>

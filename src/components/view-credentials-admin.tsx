@@ -4,32 +4,36 @@ import axios, { AxiosError } from "axios";
 // import LoginFormModal from "./login-form-modal";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from '../store';
-import { setCurrentVS } from '../store/navigationMenu/navigation';
+import { setCurrentCC, setCurrentVS } from '../store/navigationMenu/navigation';
 import Table, { CategoryCell, DownloadPDFIngredient, SelectDateFilter, TimeCell } from './table/table';
+import { Dialog } from '@headlessui/react';
+import LoginFormModal from './login-form-modal';
+import CreateUserModal from './create-user-modal';
 
-const ViewSubmissionsAdmin = () => {
-    const [submissions, setSubmissions] = useState<any[]>([]);
+
+const ViewCredentialsAdmin = () => {
+    const [credentials, setCredentials] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [sortType, setSortType] = useState('');
     const [isLoading, setIsLoading] = useState(true);
-    // const [showModal, setShowModal] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
 
-    const fetchSubmissionsAllPost = async () => {
+    const fetchCredentialsAllPost = async () => {
         const access_token = window.sessionStorage.getItem("access_token");
-        return axios.post("http://localhost:3000/v1/submissions/fetchSubmissionsAll", {}, {
+        return axios.get("http://localhost:3000/v1/users?limit=100000000&page=1", {
             headers: {
                 'Authorization': `Bearer ${access_token}`
             }
         });
     }
-    const setSubmissionsData = async () => {
+    const setCredentialsData = async () => {
         try {
             setIsLoading(true);
-            const response = await fetchSubmissionsAllPost();
+            const response = await fetchCredentialsAllPost();
             // const data = await response.json();
             console.log(response.data);
-            setSubmissions(response.data);
+            setCredentials(response.data.results);
             setIsLoading(false);
         } catch (err: any | AxiosError) {
             if (err?.response?.status === 401) {
@@ -41,20 +45,20 @@ const ViewSubmissionsAdmin = () => {
         }
     }
 
-    const fetchSubmissionsAll = async () => {
+    const fetchCredentialsAll = async () => {
         try {
-            await setSubmissionsData();
+            await setCredentialsData();
         } catch (error) {
-            console.error('Error fetching submissions:', error);
+            console.error('Error fetching credentials:', error);
         } finally {
             setIsLoading(false);
         }
     };
     const dispatch = useAppDispatch();
     useEffect(() => {
-        fetchSubmissionsAll();
-        dispatch(setCurrentVS())
-
+        setIsLoading(true);
+        fetchCredentialsAll();
+        dispatch(setCurrentCC());
     }, []);
 
     const handleSearchTermChange = (e: any) => {
@@ -65,40 +69,25 @@ const ViewSubmissionsAdmin = () => {
         setSortType(e.target.value);
     };
 
-    const filteredSubmissions = submissions.filter((submission: any) =>
-        submission.teamName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        submission.submissionType.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        submission.languageDirection.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        submission.BLEU.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        submission.Chrf2.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        submission.ribes_score.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        submission.ter_score.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredCredentials = credentials.filter((credential: any) =>
+        credential.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        credential.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        credential.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        credential.role.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const sortedSubmissions = [...filteredSubmissions].sort((a, b) => {
-        if (sortType === 'teamName') {
-            return a.teamName.localeCompare(b.teamName);
+    const sortedCredentials = [...filteredCredentials].sort((a, b) => {
+        if (sortType === 'email') {
+            return a.email.localeCompare(b.email);
         }
-        else if (sortType === 'submissionType') {
-            return a.submissionType.localeCompare(b.submissionType);
+        else if (sortType === 'id') {
+            return a.id.localeCompare(b.id);
         }
-        else if (sortType === 'languageDirection') {
-            return a.languageDirection.localeCompare(b.languageDirection);
+        else if (sortType === 'name') {
+            return a.name.localeCompare(b.name);
         }
-        else if (sortType === 'BLEU') {
-            return a.BLEU.localeCompare(b.BLEU);
-        }
-        else if (sortType === 'Chrf2') {
-            return a.Chrf2.localeCompare(b.Chrf2);
-        }
-        else if (sortType === 'ribes_score') {
-            return a.ribes_score.localeCompare(b.ribes_score);
-        }
-        else if (sortType === 'ter_score') {
-            return a.ter_score.localeCompare(b.ter_score);
-        }
-        else if (sortType === 'dateCreated') {
-            return Date.parse(a.dateCreated).valueOf() - Date.parse(b.dateCreated).valueOf();
+        else if (sortType === 'role') {
+            return a.role.localeCompare(b.role);
         }
         // Add more sort options if needed
         return 0;
@@ -126,40 +115,19 @@ const ViewSubmissionsAdmin = () => {
             // },
             {
                 Header: 'User ID',
-                accessor: 'userId',
+                accessor: 'id',
             },
             {
-                Header: 'Team Name',
-                accessor: 'teamName', // accessor is the "key" in the data
+                Header: 'Name',
+                accessor: 'name', // accessor is the "key" in the data
             },
             {
-                Header: 'Submission Type',
-                accessor: 'submissionType',
+                Header: 'Email',
+                accessor: 'email',
             },
             {
-                Header: 'Language Direction',
-                accessor: 'languageDirection',
-            },
-            {
-                Header: 'BLEU',
-                accessor: 'BLEU',
-            },
-            {
-                Header: 'Chrf2',
-                accessor: 'Chrf2',
-            },
-            {
-                Header: 'RIBES',
-                accessor: 'ribes_score',
-            },
-            {
-                Header: 'TER',
-                accessor: 'ter_score',
-            },
-            {
-                Header: 'Date Submitted',
-                accessor: 'dateCreated',
-                Cell: ({ value }) => new Date(value).toLocaleString(),
+                Header: 'Role',
+                accessor: 'role',
             },
         ],
         []
@@ -167,17 +135,21 @@ const ViewSubmissionsAdmin = () => {
 
     return (
         <>
-            {/* 
-                {showModal && (
-                <Dialog open={showModal} onClose={() => { setShowModal(false); setSubmissionsData(); }}>
+            {showModal && (
+                <Dialog open={showModal} onClose={() => setShowModal(false)}>
                     <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
-                    <div className="fixed inset-0 flex items-center justify-center">
+                    
+                    <div className="fixed inset-0 flex items-center justify-center overflow-scroll">
                         <div className="bg-white p-6">
-                            <LoginFormModal onClose={() => { setShowModal(false); setSubmissionsData; }} />
+                            <CreateUserModal onClose={() => setShowModal(false)} onCreate={() => {
+                                setShowModal(false);
+                                setIsLoading(true);
+                                fetchCredentialsAll();
+                            }}/>
                         </div>
                     </div>
                 </Dialog>
-            )} */}
+            )}
             <div className="flex min-h-full flex-1 flex-col justify-center px-6  lg:px-8 my-5 sm:mx-auto sm:w-full sm:max-w-[50rem]">
                 <div className="flex flex-row justify-between">
                     <div className="mb-4">
@@ -198,7 +170,7 @@ const ViewSubmissionsAdmin = () => {
                         >
                             <option value="">Sort By</option>
                             <option value="teamName">Team Name</option>
-                            <option value="submissionType">Submission Type</option>
+                            <option value="credentialType">Credential Type</option>
                             <option value="languageDirection">Language Direction</option>
                             <option value="BLEU">BLEU</option>
                             <option value="Chrf2">Chrf2</option>
@@ -207,6 +179,11 @@ const ViewSubmissionsAdmin = () => {
                             <option value="dateCreated">Date Submitted</option>
                             {/* Add more sort options if needed */}
                         </select>
+                    </div>
+                    <div className="h-full">
+                        <button className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onClick={() => {
+                            setShowModal(true);
+                        }}>Create User</button>
                     </div>
                 </div>
 
@@ -220,12 +197,12 @@ const ViewSubmissionsAdmin = () => {
                     <span className="sr-only">Loading...</span>
                 </div></div>
             ) : (
-                // sortedSubmissions.map((submission) => (
-                //     <Submission key={submission.id} {...submission} />
+                // sortedCredentials.map((credential) => (
+                //     <Credential key={credential.id} {...credential} />
                 // ))
                 <div className="">
                     <div className="">
-                        <Table columns={columns} data={sortedSubmissions} />
+                        <Table columns={columns} data={sortedCredentials} />
                     </div>
                 </div>
             )}
@@ -233,4 +210,4 @@ const ViewSubmissionsAdmin = () => {
     );
 };
 
-export default ViewSubmissionsAdmin;
+export default ViewCredentialsAdmin;

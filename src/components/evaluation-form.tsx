@@ -155,7 +155,7 @@ export default function EvaluationForm() {
         }
         catch (err: any | AxiosError) {
             if (err?.response?.status === 500) {
-                setSubmitMessage("Submission Failed");
+                setSubmitMessage(err?.response?.data?.message);
                 // const { teamName, submissionType, languageDirection, BLEU, Chrf2, ribes_score, ter_score } = response.data;
                 // setResult(`${teamName}\n${submissionType}\n${languageDirection}\n\nBLEU: ${BLEU}\nChrf2: ${Chrf2}\nRIBES: ${ribes_score}\nTER ${ter_score}`);
             }
@@ -168,6 +168,9 @@ export default function EvaluationForm() {
                 const { teamName: teamNameR, submissionType, languageDirection, BLEU, Chrf2, ribes_score, ter_score } = response.data;
                 setResult(`${teamNameR}\n${submissionType}\n${languageDirection}\n\nBLEU: ${BLEU}\nChrf2: ${Chrf2}\nRIBES: ${ribes_score}\nTER ${ter_score}`);
                 setSubmitMessage("Result has been saved");
+            }
+            if (err?.response?.status === 400) {
+                setSubmitMessage(err?.response?.data?.message);
             }
 
         }

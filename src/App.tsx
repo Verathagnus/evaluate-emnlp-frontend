@@ -7,6 +7,8 @@ import { Link, Outlet, Route, Routes } from "react-router-dom";
 import AdminNavbar from './components/admin-navbar';
 import ViewSubmissions from './components/view-submissions';
 import ViewSubmissionsAdmin from './components/view-submissions-admin';
+import ViewCredentialsAdmin from './components/view-credentials-admin';
+import AdminHome from './components/admin-home';
 
 const App: React.FC = () => {
   return (
@@ -18,7 +20,10 @@ const App: React.FC = () => {
 
         <Route path="admin" element={<AdminNavbar />}>
           <Route index element={<AdminLoginForm />} />
+          <Route path="home" element={<AdminHome />} />
           <Route path="submissions" element={<ViewSubmissionsAdmin />} />
+          <Route path="credentials" element={<ViewCredentialsAdmin />} />
+          <Route path="references" element={<ViewCredentialsAdmin />} />
         </Route>
       </Routes>
     </main>
