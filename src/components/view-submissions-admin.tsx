@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios, { AxiosError } from "axios";
-import { Dialog } from "@headlessui/react";
-import LoginFormModal from "./login-form-modal";
+// import { Dialog } from "@headlessui/react";
+// import LoginFormModal from "./login-form-modal";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from '../store';
+import { setCurrentVS } from '../store/navigationMenu/navigation';
+import Table, { CategoryCell, DownloadPDFIngredient, SelectDateFilter, TimeCell } from './table/table';
 
 const Submission = ({
     teamName,
@@ -46,17 +49,17 @@ const dateFormat = (dateCreated: string) => {
     return new Date(dateCreated).toLocaleString();
 }
 
-const ViewSubmissions = () => {
-    const [submissions, setSubmissions] = useState<any>([]);
+const ViewSubmissionsAdmin = () => {
+    const [submissions, setSubmissions] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [sortType, setSortType] = useState('');
     const [isLoading, setIsLoading] = useState(true);
-    const [showModal, setShowModal] = useState(false);
+    // const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
 
-    const fetchSubmissionsPost = async () => {
+    const fetchSubmissionsAllPost = async () => {
         const access_token = window.sessionStorage.getItem("access_token");
-        return axios.post("http://localhost:3000/v1/submissions/fetchSubmissions", {}, {
+        return axios.post("http://localhost:3000/v1/submissions/fetchSubmissionsAll", {}, {
             headers: {
                 'Authorization': `Bearer ${access_token}`
             }
@@ -65,34 +68,34 @@ const ViewSubmissions = () => {
     const setSubmissionsData = async () => {
         try {
             setIsLoading(true);
-            const response = await fetchSubmissionsPost();
+            const response = await fetchSubmissionsAllPost();
             // const data = await response.json();
             console.log(response.data);
-            setSubmissions(response.data.results);
+            setSubmissions(response.data);
             setIsLoading(false);
         } catch (err: any | AxiosError) {
-            if (err?.response?.status === 401)
-                setShowModal(true);
+            if (err?.response?.status === 401) {
+                navigate("/admin");
+            }
         }
         finally {
             setIsLoading(false);
         }
     }
-    useEffect(() => {
-        // Simulating an API call to fetch the submissions
-        const fetchSubmissions = async () => {
-            try {
-                // Perform the actual API call here to fetch the submissions data
-                // Replace the setTimeout with your API call
-                await setSubmissionsData();
-            } catch (error) {
-                console.error('Error fetching submissions:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
 
-        fetchSubmissions();
+    const fetchSubmissionsAll = async () => {
+        try {
+            await setSubmissionsData();
+        } catch (error) {
+            console.error('Error fetching submissions:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    const dispatch = useAppDispatch();
+    useEffect(() => {
+        fetchSubmissionsAll();
+        dispatch(setCurrentVS);
     }, []);
 
     const handleSearchTermChange = (e: any) => {
@@ -136,15 +139,77 @@ const ViewSubmissions = () => {
             return a.ter_score.localeCompare(b.ter_score);
         }
         else if (sortType === 'dateCreated') {
-            return Date.parse(a.dateCreated).valueOf()-Date.parse(b.dateCreated).valueOf();
+            return Date.parse(a.dateCreated).valueOf() - Date.parse(b.dateCreated).valueOf();
         }
         // Add more sort options if needed
         return 0;
     });
 
+    const columns = React.useMemo(
+        () => [
+            // {
+            //     Header: "Category",
+            //     accessor: "category",
+            //     Cell: CategoryCell,
+            //     Filter: SelectDateFilter,
+            //     filter: 'includes',
+            // },
+            // {
+            //     Header: "Time To Cook",
+            //     accessor: "timeToCook",
+            //     Cell: TimeCell
+            // },
+            // {
+            //     Header: "Image",
+            //     accessor: "uploadedRecipeImageFileName",
+            //     Cell: DownloadPDFIngredient,
+            //     flagAccessor: "uploadedRecipeImageFlag",
+            // },
+            {
+                Header: 'User ID',
+                accessor: 'userId', 
+            },
+            {
+                Header: 'Team Name',
+                accessor: 'teamName', // accessor is the "key" in the data
+              },
+              {
+                Header: 'Submission Type',
+                accessor: 'submissionType',
+              },
+              {
+                Header: 'Language Direction',
+                accessor: 'languageDirection',
+              },
+              {
+                Header: 'BLEU',
+                accessor: 'BLEU',
+              },
+              {
+                Header: 'Chrf2',
+                accessor: 'Chrf2',
+              },
+              {
+                Header: 'RIBES',
+                accessor: 'ribes_score',
+              },
+              {
+                Header: 'TER',
+                accessor: 'ter_score',
+              },
+              {
+                Header: 'Date Submitted',
+                accessor: 'dateCreated',
+                Cell: ({ value }) => new Date(value).toLocaleString(),
+              },
+        ],
+        []
+    );
+
     return (
         <>
-            {showModal && (
+            {/* 
+                {showModal && (
                 <Dialog open={showModal} onClose={() => { setShowModal(false); setSubmissionsData(); }}>
                     <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
                     <div className="fixed inset-0 flex items-center justify-center">
@@ -153,24 +218,8 @@ const ViewSubmissions = () => {
                         </div>
                     </div>
                 </Dialog>
-            )}
+            )} */}
             <div className="flex min-h-full flex-1 flex-col justify-center px-6  lg:px-8 my-5 sm:mx-auto sm:w-full sm:max-w-[50rem]">
-                <header className=" text-center text-lg  leading-9 tracking-tight text-gray-900">
-                    <h2> EMNLP 2023 EIGHTH CONFERENCE ON MACHINE TRANSLATION (WMT23)</h2>
-                    <h2> Shared Task: Low-Resource Indic Language Translation</h2>
-                    {/* <h1 className="text-2xl font-bold"> Evaluation</h1> */}
-
-                    <div className="flex justify-between my-5">
-                        <button className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onClick={() => {
-                            navigate("/evaluate");
-                        }}>Add Submission</button>
-                        <button className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onClick={() => {
-                            window.sessionStorage.removeItem("access_token");
-                            navigate("/");
-                        }}>Logout</button>
-
-                    </div>
-                </header>
                 <div className="flex flex-row justify-between">
                     <div className="mb-4">
                         <input
@@ -211,13 +260,18 @@ const ViewSubmissions = () => {
                         <span className="sr-only">Loading...</span>
                     </div></div>
                 ) : (
-                    sortedSubmissions.map((submission) => (
-                        <Submission key={submission.createdAt} {...submission} />
-                    ))
+                    // sortedSubmissions.map((submission) => (
+                    //     <Submission key={submission.id} {...submission} />
+                    // ))
+                    <div className="max-w-[1180px] mx-auto relative">
+                        <div className="mt-5">
+                            <Table columns={columns} data={sortedSubmissions} />
+                        </div>
+                    </div>
                 )}
             </div>
         </>
     );
 };
 
-export default ViewSubmissions;
+export default ViewSubmissionsAdmin;

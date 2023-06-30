@@ -1,29 +1,56 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
-export default function AdminLoginForm() {
+import axios, { AxiosError } from 'axios';
+export default function LoginForm() {
     const [userId, setUserId] = useState("");
     const [password, setPassword] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
-    const handleUserLogin = async () => {
-        console.log("User SignIn");
-        navigate("/evaluate");
+    const loginUserPost = (formData: any) => {
+        return axios.post('http://localhost:3000/v1/auth/loginWithIdAdmin', formData)
+    }
+    const handleUserLogin = async (e: React.ChangeEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setLoading(true);
+        setErrorMessage(""); // Clear previous error message
+        try {
+            const loginResponse = await loginUserPost({
+                id: userId,
+                password: password
+            });
+            setLoading(false);
+            console.log(loginResponse.data);
+            window.sessionStorage.setItem("access_token", loginResponse.data.tokens.access.token);
+            window.sessionStorage.setItem("refresh_token", loginResponse.data.tokens.refresh.token);
+            console.log(window.sessionStorage.getItem("access_token"));
+            navigate("/admin/submissions");
+        } catch (error: any | AxiosError) {
+            setLoading(false);
+            // console.error("Error logging in:", error);
+            if (error?.response?.status === 401) {
+                if (error?.response?.statusText.toLocaleLowerCase() === "Unauthorized".toLocaleLowerCase())
+                    setErrorMessage("Authentication failed. Please sign in as admin"); // Set error message
+            }
+            else
+                setErrorMessage("Authentication failed. Please check your credentials."); // Set error message
+        }
     }
     return (
         <>
             <header className="mt-10 text-center text-lg  leading-9 tracking-tight text-gray-900">
                 <h2> EMNLP 2023 EIGHTH CONFERENCE ON MACHINE TRANSLATION (WMT23)</h2>
                 <h2> Shared Task: Low-Resource Indic Language Translation</h2>
-                <h1 className="text-2xl font-bold"> Evaluation</h1>
+                <h1 className="text-2xl font-bold"> Admin</h1>
             </header>
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-
                     <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
                         Log in to your account
                     </h2>
                 </div>
 
-                <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                <div className=" sm:mx-auto sm:w-full sm:max-w-sm">
                     <form className="space-y-6" onSubmit={handleUserLogin}>
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
@@ -70,6 +97,9 @@ export default function AdminLoginForm() {
                                 Submit
                             </button>
                         </div>
+                        {errorMessage && (
+                            <p className="text-red-500 text-sm mt-2">{errorMessage}</p>
+                        )}
                     </form>
                 </div>
             </div>
