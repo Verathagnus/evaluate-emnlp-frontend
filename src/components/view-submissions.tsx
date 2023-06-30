@@ -3,6 +3,7 @@ import axios, { AxiosError } from "axios";
 // import { Dialog } from "@headlessui/react";
 // import LoginFormModal from "./login-form-modal";
 import { useNavigate } from "react-router-dom";
+const VITE_SERVERURL = import.meta.env.VITE_SERVERURL;
 
 const Submission = ({
     teamName,
@@ -56,7 +57,7 @@ const ViewSubmissions = () => {
 
     const fetchSubmissionsPost = async () => {
         const access_token = window.sessionStorage.getItem("access_token");
-        return axios.post("http://localhost:3000/v1/submissions/fetchSubmissions", {}, {
+        return axios.post(VITE_SERVERURL+"/v1/submissions/fetchSubmissions", {}, {
             headers: {
                 'Authorization': `Bearer ${access_token}`
             }

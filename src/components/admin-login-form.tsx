@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import axios, { AxiosError } from 'axios';
+const VITE_SERVERURL = import.meta.env.VITE_SERVERURL;
+
 export default function LoginForm() {
     const [userId, setUserId] = useState("");
     const [password, setPassword] = useState("");

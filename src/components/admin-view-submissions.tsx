@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from '../store';
 import { setCurrentVS } from '../store/navigationMenu/navigation';
 import Table, { CategoryCell, DownloadPDFIngredient, SelectDateFilter, TimeCell } from './table/table';
+const VITE_SERVERURL = import.meta.env.VITE_SERVERURL;
 
 const ViewSubmissionsAdmin = () => {
     const [submissions, setSubmissions] = useState<any[]>([]);
@@ -17,7 +18,7 @@ const ViewSubmissionsAdmin = () => {
 
     const fetchSubmissionsAllPost = async () => {
         const access_token = window.sessionStorage.getItem("access_token");
-        return axios.post("http://localhost:3000/v1/submissions/fetchSubmissionsAll", {}, {
+        return axios.post(VITE_SERVERURL+"/v1/submissions/fetchSubmissionsAll", {}, {
             headers: {
                 'Authorization': `Bearer ${access_token}`
             }

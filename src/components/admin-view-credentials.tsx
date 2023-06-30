@@ -9,6 +9,7 @@ import Table, { CategoryCell, DownloadPDFIngredient, SelectDateFilter, TimeCell 
 import { Dialog } from '@headlessui/react';
 import LoginFormModal from './login-form-modal';
 import CreateUserModal from './create-user-modal';
+const VITE_SERVERURL = import.meta.env.VITE_SERVERURL;
 
 
 const ViewCredentialsAdmin = () => {
@@ -21,7 +22,7 @@ const ViewCredentialsAdmin = () => {
 
     const fetchCredentialsAllPost = async () => {
         const access_token = window.sessionStorage.getItem("access_token");
-        return axios.get("http://localhost:3000/v1/users?limit=100000000&page=1", {
+        return axios.get(VITE_SERVERURL+"/v1/users?limit=100000000&page=1", {
             headers: {
                 'Authorization': `Bearer ${access_token}`
             }

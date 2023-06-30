@@ -6,6 +6,9 @@ import CustomFileInput from "./custom-file-upload-button";
 import axios, { AxiosError } from "axios";
 import { Dialog } from "@headlessui/react";
 import LoginFormModal from "./login-form-modal";
+const VITE_SERVERURL = import.meta.env.VITE_SERVERURL;
+
+
 export default function EvaluationForm() {
     const [showModal, setShowModal] = useState(false);
     const [teamName, setTeamName] = useState("");
@@ -73,7 +76,7 @@ export default function EvaluationForm() {
     const navigate = useNavigate();
     const evaluateResultPost = (formData: any) => {
         const access_token = window.sessionStorage.getItem("access_token");
-        return axios.post("http://localhost:3000/v1/submissions/evaluateSubmission", formData, {
+        return axios.post(VITE_SERVERURL+"/v1/submissions/evaluateSubmission", formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${access_token}`
@@ -83,7 +86,7 @@ export default function EvaluationForm() {
 
     const saveResultPost = (formData: any) => {
         const access_token = window.sessionStorage.getItem("access_token");
-        return axios.post("http://localhost:3000/v1/submissions/saveSubmission", formData, {
+        return axios.post(VITE_SERVERURL+"/v1/submissions/saveSubmission", formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${access_token}`
@@ -94,7 +97,7 @@ export default function EvaluationForm() {
     const refreshTokenPost = async () => {
         const refresh_token = window.sessionStorage.getItem("refresh_token");
         try {
-            const response = await axios.post("http://localhost:3000/v1/auth/refresh-tokens", { refreshToken: refresh_token });
+            const response = await axios.post(VITE_SERVERURL+"/v1/auth/refresh-tokens", { refreshToken: refresh_token });
             window.sessionStorage.setItem("access_token", response.data.access.token);
             window.sessionStorage.setItem("refresh_token", response.data.refresh.token);
         }

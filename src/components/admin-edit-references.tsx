@@ -10,9 +10,9 @@ import { Dialog } from '@headlessui/react';
 import LoginFormModal from './login-form-modal';
 import CreateUserModal from './create-user-modal';
 import UploadReferenceForm from './upload-reference-form';
+const VITE_SERVERURL = import.meta.env.VITE_SERVERURL;
 
-
-const EditReferencesAdmin = () => {
+export default function EditReferencesAdmin () {
     const [references, setReferences] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [sortType, setSortType] = useState('');
@@ -22,7 +22,7 @@ const EditReferencesAdmin = () => {
 
     const fetchReferencesAllPost = async () => {
         const access_token = window.sessionStorage.getItem("access_token");
-        return axios.get("http://localhost:3000/v1/submissions/getReferencesList", {
+        return axios.get(VITE_SERVERURL+"/v1/submissions/getReferencesList", {
             headers: {
                 'Authorization': `Bearer ${access_token}`
             }
@@ -204,5 +204,3 @@ const EditReferencesAdmin = () => {
         </>
     );
 };
-
-export default EditReferencesAdmin;

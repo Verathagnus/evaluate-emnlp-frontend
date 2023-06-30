@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import axios, { AxiosError } from 'axios';
 import SelectSubmissionType from "./select-submission-type";
+const VITE_SERVERURL = import.meta.env.VITE_SERVERURL;
+
 export default function CreateUserModal({ onClose, onCreate }: any) {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");

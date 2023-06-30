@@ -19,6 +19,7 @@ import { SortIcon, SortUpIcon, SortDownIcon } from "./shared/Icons";
 import { useAppDispatch } from "../../store";
 import axios from "axios";
 import { Dialog, Transition } from '@headlessui/react';
+const VITE_SERVERURL = import.meta.env.VITE_SERVERURL;
 
 // Define a default UI for filtering
 function GlobalFilter({

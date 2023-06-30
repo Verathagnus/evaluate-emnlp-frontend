@@ -4,6 +4,9 @@ import SelectSubmissionType from "./select-submission-type";
 import SelectTranslationDirection from "./select-translation-direction";
 import CustomFileInput from "./custom-file-upload-button";
 import axios, { AxiosError } from "axios";
+const VITE_SERVERURL = import.meta.env.VITE_SERVERURL;
+
+
 export default function UploadReferenceForm({ onClose, onCreate }: any) {
     const [showModal, setShowModal] = useState(false);
     const [submitMessage, setSubmitMessage] = useState("");
@@ -65,7 +68,7 @@ export default function UploadReferenceForm({ onClose, onCreate }: any) {
     const navigate = useNavigate();
     const uploadReferenceFilePost = (formData: any) => {
         const access_token = window.sessionStorage.getItem("access_token");
-        return axios.post("http://localhost:3000/v1/submissions/uploadReference", formData, {
+        return axios.post(VITE_SERVERURL+"/v1/submissions/uploadReference", formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${access_token}`
@@ -76,7 +79,7 @@ export default function UploadReferenceForm({ onClose, onCreate }: any) {
     const refreshTokenPost = async () => {
         const refresh_token = window.sessionStorage.getItem("refresh_token");
         try {
-            const response = await axios.post("http://localhost:3000/v1/auth/refresh-tokens", { refreshToken: refresh_token });
+            const response = await axios.post(VITE_SERVERURL+"/v1/auth/refresh-tokens", { refreshToken: refresh_token });
             window.sessionStorage.setItem("access_token", response.data.access.token);
             window.sessionStorage.setItem("refresh_token", response.data.refresh.token);
         }
