@@ -255,7 +255,7 @@ export function ViewFile({ value, column, row }: any) {
     const access_token = window.sessionStorage.getItem('access_token');
     try {
       const response = await axios.post(
-        'http://localhost:3000/v1/submissions/getReferenceFile',
+        VITE_SERVERURL+'/v1/submissions/getReferenceFile',
         {
           ...row.original
         },

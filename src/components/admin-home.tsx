@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch } from "../store";
 import { setCurrentHome } from "../store/navigationMenu/navigation";
-
 // import feedImage from "../../assets/rss.png";
 // import galleryImage from "../../assets/gallery.png";
 // import postsImage from "../../assets/blog.png";

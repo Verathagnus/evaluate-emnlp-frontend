@@ -10,7 +10,7 @@ export default function LoginForm() {
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
     const loginUserPost = (formData: any) => {
-        return axios.post('http://localhost:3000/v1/auth/loginWithIdAdmin', formData)
+        return axios.post(VITE_SERVERURL+'/v1/auth/loginWithIdAdmin', formData)
     }
     const handleUserLogin = async (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();

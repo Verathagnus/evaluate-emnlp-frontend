@@ -24,7 +24,7 @@ export default function CreateUserModal({ onClose, onCreate }: any) {
     const navigate = useNavigate();
     const createUserPost = (formData: any) => {
         const access_token = window.sessionStorage.getItem("access_token");
-        return axios.post('http://localhost:3000/v1/users', formData, {
+        return axios.post(VITE_SERVERURL+'/v1/users', formData, {
             headers: {
                 'Authorization': `Bearer ${access_token}`
             }

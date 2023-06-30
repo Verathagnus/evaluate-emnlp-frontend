@@ -6,7 +6,6 @@ import { selectNavigationMenu } from '../store/navigationMenu/navigation'
 import { Outlet, useNavigate } from 'react-router-dom'
 
 
-
 function classNames(...classes: any) {
   return classes.filter(Boolean).join(' ')
 }
