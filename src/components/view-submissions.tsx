@@ -129,7 +129,7 @@ const Submission = ({
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <div className="relative bg-white  w-96 max-w-md mx-auto my-6">
+                            <div className="relative bg-white  w-[60rem] max-w-md mx-auto my-6">
                                 <Dialog.Title className="text-lg font-bold mt-4 mx-6">
                                     System Description
                                 </Dialog.Title>
@@ -185,7 +185,7 @@ const Submission = ({
                             leaveFrom="opacity-100 scale-100"
                             leaveTo="opacity-0 scale-95"
                         >
-                            <div className="relative bg-white  w-96 max-w-md mx-auto my-6">
+                            <div className="relative bg-white  w-[60rem] max-w-md mx-auto my-6">
                                 <Dialog.Title className="text-lg font-bold mt-4 mx-6">
                                     Uploaded File
                                 </Dialog.Title>

@@ -320,7 +320,7 @@ export function ViewFile({ value, column, row }: any) {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <div className="relative bg-white rounded-lg w-96 max-w-md mx-auto my-6">
+              <div className="relative bg-white rounded-lg w-[60rem] max-w-md mx-auto my-6">
                 <Dialog.Title className="text-lg font-bold mt-4 mx-6">
                   File Content
                 </Dialog.Title>
@@ -415,7 +415,7 @@ export function ViewSelectedFile({ value, column, row }: any) {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <div className="relative bg-white rounded-lg w-96 max-w-md mx-auto my-6">
+              <div className="relative bg-white rounded-lg w-[60rem] max-w-md mx-auto my-6">
                 <Dialog.Title className="text-lg font-bold mt-4 mx-6">
                   File Content
                 </Dialog.Title>
