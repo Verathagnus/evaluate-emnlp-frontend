@@ -26,7 +26,7 @@ export default function LoginForm() {
             window.sessionStorage.setItem("access_token", loginResponse.data.tokens.access.token);
             window.sessionStorage.setItem("refresh_token", loginResponse.data.tokens.refresh.token);
             console.log(window.sessionStorage.getItem("access_token"));
-            navigate("/admin/submissions");
+            navigate("/admin/home");
         } catch (error: any | AxiosError) {
             setLoading(false);
             // console.error("Error logging in:", error);
