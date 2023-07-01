@@ -4,13 +4,13 @@ import axios from 'axios';
 const VITE_SERVERURL = import.meta.env.VITE_SERVERURL;
 
 export default function LoginFormModal({ onClose }: any) {
-    const [userId, setUserId] = useState("");
+    const [teamName, setTeamName] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
     const loginUserPost = (formData: any) => {
-        return axios.post(VITE_SERVERURL+'/v1/auth/loginWithId', formData)
+        return axios.post(VITE_SERVERURL+'/v1/auth/loginWithTeamName', formData)
     }
     const handleUserLogin = async (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -18,7 +18,7 @@ export default function LoginFormModal({ onClose }: any) {
         setErrorMessage(""); // Clear previous error message
         try {
             const loginResponse = await loginUserPost({
-                id: userId,
+                teamName: teamName,
                 password: password
             });
             setLoading(false);
@@ -54,10 +54,10 @@ export default function LoginFormModal({ onClose }: any) {
                             </label>
                             <div className="mt-2">
                                 <input
-                                    value={userId}
-                                    onChange={(e) => setUserId(e.target.value)}
-                                    id="userId"
-                                    name="userId"
+                                    value={teamName}
+                                    onChange={(e) => setTeamName(e.target.value)}
+                                    id="teamName"
+                                    name="teamName"
                                     type="text"
                                     required
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"

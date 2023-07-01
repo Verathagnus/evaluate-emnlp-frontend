@@ -4,7 +4,7 @@ import axios, { AxiosError } from "axios";
 // import LoginFormModal from "./login-form-modal";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from '../store';
-import { setCurrentCC, setCurrentVS } from '../store/navigationMenu/navigation';
+import { setCurrentCC } from '../store/navigationMenu/navigation';
 import Table, { CategoryCell, DownloadPDFIngredient, SelectDateFilter, TimeCell } from './table/table';
 import { Dialog } from '@headlessui/react';
 import LoginFormModal from './login-form-modal';
@@ -71,7 +71,7 @@ const ViewCredentialsAdmin = () => {
     };
 
     const filteredCredentials = credentials.filter((credential: any) =>
-        credential.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        credential.teamName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         credential.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
         credential.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         credential.role.toLowerCase().includes(searchTerm.toLowerCase())
@@ -84,8 +84,8 @@ const ViewCredentialsAdmin = () => {
         else if (sortType === 'id') {
             return a.id.localeCompare(b.id);
         }
-        else if (sortType === 'name') {
-            return a.name.localeCompare(b.name);
+        else if (sortType === 'teamName') {
+            return a.teamName.localeCompare(b.teamName);
         }
         else if (sortType === 'role') {
             return a.role.localeCompare(b.role);
@@ -115,12 +115,12 @@ const ViewCredentialsAdmin = () => {
             //     flagAccessor: "uploadedRecipeImageFlag",
             // },
             {
-                Header: 'User ID',
-                accessor: 'id',
+                Header: 'Team Name',
+                accessor: 'teamName',
             },
             {
-                Header: 'Name',
-                accessor: 'name', // accessor is the "key" in the data
+                Header: 'User Id',
+                accessor: 'id', // accessor is the "key" in the data
             },
             {
                 Header: 'Email',

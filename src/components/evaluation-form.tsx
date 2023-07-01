@@ -1,20 +1,33 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useRef, MouseEventHandler, ReactEventHandler } from "react"
 import { useNavigate } from "react-router-dom";
 import SelectSubmissionType from "./select-submission-type";
 import SelectTranslationDirection from "./select-translation-direction";
 import CustomFileInput from "./custom-file-upload-button";
 import axios, { AxiosError } from "axios";
-import { Dialog } from "@headlessui/react";
+import { Dialog, Transition } from "@headlessui/react";
 import LoginFormModal from "./login-form-modal";
 const VITE_SERVERURL = import.meta.env.VITE_SERVERURL;
+const httpClient = axios.create();
 
+httpClient.defaults.timeout = 10000;
 
 export default function EvaluationForm() {
     const [showModal, setShowModal] = useState(false);
-    const [teamName, setTeamName] = useState("");
+    const [isOpen, setIsOpen] = useState(false);
+    const [fileContent, setFileContent] = useState('');
+    const openModal = (e: React.ChangeEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setIsOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsOpen(false);
+    };
+    // const [teamName, setTeamName] = useState("");
     const [submitMessage, setSubmitMessage] = useState("");
 
     const [result, setResult] = useState("");
+    const [systemDescription, setSystemDescription] = useState("");
     const submissionTypes = [
         {
             id: 1,
@@ -76,7 +89,7 @@ export default function EvaluationForm() {
     const navigate = useNavigate();
     const evaluateResultPost = (formData: any) => {
         const access_token = window.sessionStorage.getItem("access_token");
-        return axios.post(VITE_SERVERURL+"/v1/submissions/evaluateSubmission", formData, {
+        return httpClient.post(VITE_SERVERURL + "/v1/submissions/evaluateSubmission", formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${access_token}`
@@ -86,7 +99,7 @@ export default function EvaluationForm() {
 
     const saveResultPost = (formData: any) => {
         const access_token = window.sessionStorage.getItem("access_token");
-        return axios.post(VITE_SERVERURL+"/v1/submissions/saveSubmission", formData, {
+        return httpClient.post(VITE_SERVERURL + "/v1/submissions/saveSubmission", formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'Authorization': `Bearer ${access_token}`
@@ -97,7 +110,7 @@ export default function EvaluationForm() {
     const refreshTokenPost = async () => {
         const refresh_token = window.sessionStorage.getItem("refresh_token");
         try {
-            const response = await axios.post(VITE_SERVERURL+"/v1/auth/refresh-tokens", { refreshToken: refresh_token });
+            const response = await httpClient.post(VITE_SERVERURL + "/v1/auth/refresh-tokens", { refreshToken: refresh_token });
             window.sessionStorage.setItem("access_token", response.data.access.token);
             window.sessionStorage.setItem("refresh_token", response.data.refresh.token);
         }
@@ -108,16 +121,21 @@ export default function EvaluationForm() {
     const handleEvaluateResult = async (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault()
         // console.log(teamName, selectedSubmissionType["name"], selectedTranslationDirection["name"]);
+        if(selectedFiles.length === 0){
+            setSubmitMessage(`Please upload a file`);
+            scrollToBottom();
+            return;
+        }
         console.log("Selected File:", selectedFiles);
         const formData = new FormData();
-        formData.append('teamName', teamName);
+        // formData.append('teamName', teamName);
         formData.append('submissionType', selectedSubmissionType["name"]);
         formData.append('translationDirection', selectedTranslationDirection["name"]);
         formData.append('selectedFile', selectedFiles[0]);
         var response;
         try {
             response = await evaluateResultPost(formData);
-            console.log(response.status)
+            // console.log(response.status)
             const { teamName: teamNameR, submissionType, languageDirection, BLEU, Chrf2, ribes_score, ter_score } = response.data;
             setResult(`${teamNameR}\n${submissionType}\n${languageDirection}\n\nBLEU: ${BLEU}\nChrf2: ${Chrf2}\nRIBES: ${ribes_score}\nTER ${ter_score}`);
             scrollToBottom();
@@ -133,19 +151,30 @@ export default function EvaluationForm() {
                 setResult(`${teamNameR}\n${submissionType}\n${languageDirection}\n\nBLEU: ${BLEU}\nChrf2: ${Chrf2}\nRIBES: ${ribes_score}\nTER ${ter_score}`);
                 scrollToBottom();
             }
+            if (err?.response?.status === 500) {
+                setResult(`Check number of lines of file uploaded`);
+                scrollToBottom();
+            }
         }
 
 
     }
 
-    const handleSubmitResult = async (e: React.ChangeEvent<HTMLFormElement>) => {
-        e.preventDefault()
+    const handleSubmitResult = async (e: any) => {
+        // e.preventDefault()
+        closeModal();
         // console.log(teamName, selectedSubmissionType["name"], selectedTranslationDirection["name"]);
+        if(selectedFiles.length === 0){
+            setSubmitMessage(`Please upload a file`);
+            scrollToBottom();
+            return;
+        }
         console.log("Selected File:", selectedFiles);
         const formData = new FormData();
-        formData.append('teamName', teamName);
+        // formData.append('teamName', teamName);
         formData.append('submissionType', selectedSubmissionType["name"]);
         formData.append('translationDirection', selectedTranslationDirection["name"]);
+        formData.append('systemDescription', systemDescription);
         formData.append('selectedFile', selectedFiles[0]);
 
         try {
@@ -194,6 +223,62 @@ export default function EvaluationForm() {
                     </div>
                 </Dialog>
             )}
+            <Transition.Root show={isOpen} as={React.Fragment}>
+                <Dialog
+                    as="div"
+                    className="fixed z-10 inset-0 overflow-y-auto"
+                    onClose={closeModal}
+                >
+                    <div className="flex items-center justify-center min-h-screen px-4">
+                        <Transition.Child
+                            as={React.Fragment}
+                            enter="ease-out duration-300"
+                            enterFrom="opacity-0"
+                            enterTo="opacity-100"
+                            leave="ease-in duration-200"
+                            leaveFrom="opacity-100"
+                            leaveTo="opacity-0"
+                        >
+                            <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+                        </Transition.Child>
+
+                        <Transition.Child
+                            as={React.Fragment}
+                            enter="ease-out duration-300"
+                            enterFrom="opacity-0 scale-95"
+                            enterTo="opacity-100 scale-100"
+                            leave="ease-in duration-200"
+                            leaveFrom="opacity-100 scale-100"
+                            leaveTo="opacity-0 scale-95"
+                        >
+                            <div className="relative bg-white  w-[60rem] max-w-md mx-auto my-6">
+                                <Dialog.Title className="text-lg font-bold mt-4 mx-6">
+                                    Warning
+                                </Dialog.Title>
+                                <div className="px-6 py-4 whitespace-pre-line ">
+                                    <p className="text-gray-800 overflow-scroll break-all whitespace-pre-line ">You can only submit once for {`${selectedSubmissionType.name} Submission Type and ${selectedTranslationDirection.name} Language Direction`}</p>
+                                </div>
+                                <div className="flex justify-between items-center px-6 py-4 bg-gray-100">
+                                    <button
+                                        type="button"
+                                        className="px-4 py-2 bg-red-500 rounded-lg text-white font-bold"
+                                        onClick={handleSubmitResult}
+                                    >
+                                        Submit
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className="px-4 py-2 bg-indigo-500 rounded-lg text-white font-bold"
+                                        onClick={closeModal}
+                                    >
+                                        No
+                                    </button>
+                                </div>
+                            </div>
+                        </Transition.Child>
+                    </div>
+                </Dialog>
+            </Transition.Root>
             <div className="flex min-h-full flex-1 flex-col justify-center px-6  lg:px-8 mt-5 sm:mx-auto sm:w-full sm:max-w-[50rem]">
 
                 <header className=" text-center text-lg  leading-9 tracking-tight text-gray-900 ">
@@ -210,6 +295,7 @@ export default function EvaluationForm() {
                         }}>Logout</button>
 
                     </div>
+                    <p className="text-red-600">For each Language Direction, You can submit result only once for each of the PRIMARY, CONTRASTIVE-1, CONTRASTIVE-2 submission types.</p>
                 </header>
             </div>
             <div className="flex min-h-full flex-1 flex-col justify-center px-6  lg:px-8">
@@ -222,7 +308,7 @@ export default function EvaluationForm() {
 
                 <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
                     <form className="space-y-6" onSubmit={handleEvaluateResult}>
-                        <div>
+                        {/* <div>
                             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                                 Team Name
                             </label>
@@ -237,7 +323,7 @@ export default function EvaluationForm() {
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 />
                             </div>
-                        </div>
+                        </div> */}
 
                         <div>
                             <label htmlFor="submissionType" className="block text-sm font-medium leading-6 text-gray-900">
@@ -279,7 +365,7 @@ export default function EvaluationForm() {
             </div>
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 mb-10 lg:px-8 ">
                 <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                    <form className="space-y-6" onSubmit={handleSubmitResult}>
+                    <form className="space-y-6" onSubmit={openModal}>
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
                                 Result
@@ -296,10 +382,27 @@ export default function EvaluationForm() {
                                 />
                             </div>
                         </div>
+
+                        <div>
+                            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                                System Description and Dataset within 50 words
+                            </label>
+                            <div className="mt-2">
+                                <textarea
+                                    rows={4}
+                                    id="result"
+                                    name="result"
+                                    required
+                                    value={systemDescription}
+                                    onChange={(e) => setSystemDescription(e.target.value)}
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                />
+                            </div>
+                        </div>
                         <div>
                             <button
                                 type="submit"
-                                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                className="flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                             >
                                 Submit Result
                             </button>

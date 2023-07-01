@@ -255,7 +255,7 @@ export function ViewFile({ value, column, row }: any) {
     const access_token = window.sessionStorage.getItem('access_token');
     try {
       const response = await axios.post(
-        VITE_SERVERURL+'/v1/submissions/getReferenceFile',
+        VITE_SERVERURL + '/v1/submissions/getReferenceFile',
         {
           ...row.original
         },
@@ -278,7 +278,7 @@ export function ViewFile({ value, column, row }: any) {
     const element = document.createElement('a');
     const file = new Blob([fileContent], { type: 'text/plain' });
     element.href = URL.createObjectURL(file);
-    element.download = row.original.submissionType+"_"+row.original.fileName;
+    element.download = row.original.submissionType + "_" + row.original.fileName;
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
@@ -324,8 +324,106 @@ export function ViewFile({ value, column, row }: any) {
                 <Dialog.Title className="text-lg font-bold mt-4 mx-6">
                   File Content
                 </Dialog.Title>
-                <div className="px-6 py-4">
+                {/* <div className="px-6 py-4">
                   <p className="text-gray-800">{fileContent}</p>
+                </div> */}
+                <div className="px-6 py-4 whitespace-pre-line ">
+                  <p className="text-gray-800 overflow-scroll break-all whitespace-pre-line ">{fileContent}</p>
+                </div>
+                <div className="flex justify-between items-center px-6 py-4 bg-gray-100">
+                  <button
+                    type="button"
+                    className="px-4 py-2 bg-gray-300 rounded-lg text-gray-800 font-bold"
+                    onClick={downloadFile}
+                  >
+                    Download
+                  </button>
+                  <button
+                    type="button"
+                    className="px-4 py-2 bg-red-500 rounded-lg text-white font-bold"
+                    onClick={closeModal}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition.Root>
+    </>
+  );
+}
+
+export function ViewSelectedFile({ value, column, row }: any) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [fileContent, setFileContent] = useState('');
+
+  const openModal = () => {
+    setIsOpen(true);
+    setFileContent(row.original.selectedFile)
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+    setFileContent('');
+  };
+
+  const downloadFile = () => {
+    const element = document.createElement('a');
+    const file = new Blob([fileContent], { type: 'text/plain' });
+    element.href = URL.createObjectURL(file);
+    element.download = row.original.submissionType + "_" + row.original.fileName;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
+
+  return (
+    <>
+      <span className="px-3 py-1 uppercase leading-wide font-bold text-xs rounded-full shadow-sm  bg-green-100 text-green-600">
+        <button type="button" onClick={openModal}>
+          View
+        </button>
+      </span>
+
+      <Transition.Root show={isOpen} as={React.Fragment}>
+        <Dialog
+          as="div"
+          className="fixed z-10 inset-0 overflow-y-auto"
+          onClose={closeModal}
+        >
+          <div className="flex items-center justify-center min-h-screen px-4">
+            <Transition.Child
+              as={React.Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+            </Transition.Child>
+
+            <Transition.Child
+              as={React.Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <div className="relative bg-white rounded-lg w-96 max-w-md mx-auto my-6">
+                <Dialog.Title className="text-lg font-bold mt-4 mx-6">
+                  File Content
+                </Dialog.Title>
+                {/* <div className="px-6 py-4">
+                  <p className="text-gray-800">{fileContent}</p>
+                </div> */}
+                <div className="px-6 py-4 whitespace-pre-line ">
+                  <p className="text-gray-800 overflow-scroll break-all whitespace-pre-line ">{fileContent}</p>
                 </div>
                 <div className="flex justify-between items-center px-6 py-4 bg-gray-100">
                   <button

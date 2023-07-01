@@ -5,7 +5,9 @@ import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from '../store';
 import { setCurrentVS } from '../store/navigationMenu/navigation';
-import Table, { CategoryCell, DownloadPDFIngredient, SelectDateFilter, TimeCell } from './table/table';
+import Table, { CategoryCell, DownloadPDFIngredient, SelectDateFilter, TimeCell, ViewSelectedFile } from './table/table';
+import SelectSubmissionType from './select-submission-type';
+import SelectTranslationDirection from './select-translation-direction';
 const VITE_SERVERURL = import.meta.env.VITE_SERVERURL;
 
 const ViewSubmissionsAdmin = () => {
@@ -18,7 +20,7 @@ const ViewSubmissionsAdmin = () => {
 
     const fetchSubmissionsAllPost = async () => {
         const access_token = window.sessionStorage.getItem("access_token");
-        return axios.post(VITE_SERVERURL+"/v1/submissions/fetchSubmissionsAll", {}, {
+        return axios.post(VITE_SERVERURL + "/v1/submissions/fetchSubmissionsAll", {}, {
             headers: {
                 'Authorization': `Bearer ${access_token}`
             }
@@ -66,6 +68,66 @@ const ViewSubmissionsAdmin = () => {
         setSortType(e.target.value);
     };
 
+    const submissionTypes = [
+        {
+            id: 0,
+            name: '',
+        },
+        {
+            id: 1,
+            name: 'PRIMARY',
+        },
+        {
+            id: 2,
+            name: 'CONTRASTIVE-1',
+        },
+        {
+            id: 3,
+            name: 'CONTRASTIVE-2',
+        },
+    ]
+    const [selectedSubmissionType, setSelectedSubmissionType] = useState(submissionTypes[0])
+
+    const translationDirectionOptions = [
+        {
+            id: 0,
+            name: '',
+        },
+        {
+            id: 1,
+            name: 'English-to-Assamese',
+        },
+        {
+            id: 2,
+            name: 'Assamese-to-English',
+        },
+        {
+            id: 3,
+            name: 'En-to-Mz',
+        },
+        {
+            id: 4,
+            name: 'Mz-to-En',
+        },
+        {
+            id: 5,
+            name: 'En-to-Kha',
+        },
+        {
+            id: 6,
+            name: 'Kha-to-En',
+        },
+        {
+            id: 7,
+            name: 'En-to-Mni',
+        },
+        {
+            id: 8,
+            name: 'Mni-to-En',
+        },
+    ]
+    const [selectedTranslationDirection, setSelectedTranslationDirection] = useState(translationDirectionOptions[0]);
+
     const filteredSubmissions = submissions.filter((submission: any) =>
         submission.teamName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         submission.submissionType.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -74,7 +136,8 @@ const ViewSubmissionsAdmin = () => {
         submission.Chrf2.toLowerCase().includes(searchTerm.toLowerCase()) ||
         submission.ribes_score.toLowerCase().includes(searchTerm.toLowerCase()) ||
         submission.ter_score.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    ).filter((submission: any) =>
+        submission.submissionType.toLowerCase().includes(selectedSubmissionType.name.toLowerCase()) && submission.languageDirection.toLowerCase().includes(selectedTranslationDirection.name.toLowerCase()));
 
     const sortedSubmissions = [...filteredSubmissions].sort((a, b) => {
         if (sortType === 'teamName') {
@@ -126,10 +189,6 @@ const ViewSubmissionsAdmin = () => {
             //     flagAccessor: "uploadedRecipeImageFlag",
             // },
             {
-                Header: 'User ID',
-                accessor: 'userId',
-            },
-            {
                 Header: 'Team Name',
                 accessor: 'teamName', // accessor is the "key" in the data
             },
@@ -140,6 +199,10 @@ const ViewSubmissionsAdmin = () => {
             {
                 Header: 'Language Direction',
                 accessor: 'languageDirection',
+            },
+            {
+                Header: "View",
+                Cell: ViewSelectedFile
             },
             {
                 Header: 'BLEU',
@@ -179,7 +242,7 @@ const ViewSubmissionsAdmin = () => {
                     </div>
                 </Dialog>
             )} */}
-            <div className="flex min-h-full flex-1 flex-col justify-center px-6  lg:px-8 my-5 sm:mx-auto sm:w-full sm:max-w-[50rem]">
+            <div className="flex min-h-full flex-1 flex-col justify-center px-6  lg:px-8 my-5 sm:mx-auto sm:w-full ">
                 <div className="flex flex-row justify-between">
                     <div className="mb-4">
                         <input
@@ -208,6 +271,12 @@ const ViewSubmissionsAdmin = () => {
                             <option value="dateCreated">Date Submitted</option>
                             {/* Add more sort options if needed */}
                         </select>
+                    </div>
+                    <div className="mb-4 w-[12rem]">
+                        <SelectSubmissionType optionTypes={submissionTypes} selectedType={selectedSubmissionType} setSelectedType={setSelectedSubmissionType} />
+                    </div>
+                    <div className="mb-4">
+                        <SelectTranslationDirection optionTypes={translationDirectionOptions} selectedType={selectedTranslationDirection} setSelectedType={setSelectedTranslationDirection} />
                     </div>
                 </div>
 

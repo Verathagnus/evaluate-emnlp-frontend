@@ -5,7 +5,7 @@ import SelectSubmissionType from "./select-submission-type";
 const VITE_SERVERURL = import.meta.env.VITE_SERVERURL;
 
 export default function CreateUserModal({ onClose, onCreate }: any) {
-    const [name, setName] = useState("");
+    const [teamName, setName] = useState("");
     const [email, setEmail] = useState("");
     const roleTypes = [
         {
@@ -24,7 +24,7 @@ export default function CreateUserModal({ onClose, onCreate }: any) {
     const navigate = useNavigate();
     const createUserPost = (formData: any) => {
         const access_token = window.sessionStorage.getItem("access_token");
-        return axios.post(VITE_SERVERURL+'/v1/users', formData, {
+        return axios.post(VITE_SERVERURL + '/v1/users', formData, {
             headers: {
                 'Authorization': `Bearer ${access_token}`
             }
@@ -36,7 +36,7 @@ export default function CreateUserModal({ onClose, onCreate }: any) {
         setErrorMessage(""); // Clear previous error message
         try {
             const createResponse = await createUserPost({
-                name: name,
+                teamName: teamName,
                 email: email,
                 password: password,
                 role: role.name
@@ -65,7 +65,7 @@ export default function CreateUserModal({ onClose, onCreate }: any) {
                         Create a new user
                     </h2>
                     <p className="text-center   leading-9 tracking-tight  text-blue-500 text-md">
-                        Enter Name, Email and Password
+                        Enter Team Name, Email and Password
                     </p>
                 </div>
 
@@ -73,14 +73,14 @@ export default function CreateUserModal({ onClose, onCreate }: any) {
                     <form className="space-y-6" onSubmit={handleCreateUser}>
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                                Name
+                                Team Name
                             </label>
                             <div className="mt-2">
                                 <input
-                                    value={name}
+                                    value={teamName}
                                     onChange={(e) => setName(e.target.value)}
-                                    id="name"
-                                    name="name"
+                                    id="teamName"
+                                    name="teamName"
                                     type="text"
                                     required
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -96,8 +96,8 @@ export default function CreateUserModal({ onClose, onCreate }: any) {
                                 <input
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    id="name"
-                                    name="name"
+                                    id="email"
+                                    name="email"
                                     type="text"
                                     required
                                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
