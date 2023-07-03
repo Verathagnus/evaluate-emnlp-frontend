@@ -59,7 +59,7 @@ export default function EvaluationForm() {
         },
         {
             id: 4,
-            name: 'Mizo-to-En',
+            name: 'Mizo-to-English',
         },
         {
             id: 5,
@@ -67,7 +67,7 @@ export default function EvaluationForm() {
         },
         {
             id: 6,
-            name: 'Kha-to-En',
+            name: 'Kha-to-English',
         },
         {
             id: 7,
@@ -75,7 +75,7 @@ export default function EvaluationForm() {
         },
         {
             id: 8,
-            name: 'Manipuri-to-En',
+            name: 'Manipuri-to-English',
         },
     ]
     const [selectedTranslationDirection, setSelectedTranslationDirection] = useState(translationDirectionOptions[0]);

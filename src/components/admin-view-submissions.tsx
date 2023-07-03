@@ -107,7 +107,7 @@ const ViewSubmissionsAdmin = () => {
         },
         {
             id: 4,
-            name: 'Mizo-to-En',
+            name: 'Mizo-to-English',
         },
         {
             id: 5,
@@ -115,7 +115,7 @@ const ViewSubmissionsAdmin = () => {
         },
         {
             id: 6,
-            name: 'Kha-to-En',
+            name: 'Kha-to-English',
         },
         {
             id: 7,
@@ -123,7 +123,7 @@ const ViewSubmissionsAdmin = () => {
         },
         {
             id: 8,
-            name: 'Manipuri-to-En',
+            name: 'Manipuri-to-English',
         },
     ]
     const [selectedTranslationDirection, setSelectedTranslationDirection] = useState(translationDirectionOptions[0]);
