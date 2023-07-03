@@ -385,7 +385,7 @@ export default function EvaluationForm() {
 
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                                System Description and Dataset within 50 words
+                                Write about system description and dataset used (within 50 words)
                             </label>
                             <div className="mt-2">
                                 <textarea
