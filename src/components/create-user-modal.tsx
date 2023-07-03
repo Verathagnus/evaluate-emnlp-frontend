@@ -65,15 +65,25 @@ export default function CreateUserModal({ onClose, onCreate }: any) {
                         Create a new user
                     </h2>
                     <p className="text-center   leading-9 tracking-tight  text-blue-500 text-md">
-                        Enter Team Name, Email and Password
+                        Enter {role.name === "user" ? "Team" : "User"} Name, Email and Password
                     </p>
                 </div>
 
                 <div className="mt-10 sm:mx-auto sm:w-full sm:w-md">
                     <form className="space-y-6" onSubmit={handleCreateUser}>
+
+                        <div>
+                            <label htmlFor="submissionType" className="block text-sm font-medium leading-6 text-gray-900">
+                                Select Role
+                            </label>
+                            <div className="mt-2">
+                                <SelectSubmissionType optionTypes={roleTypes} selectedType={role} setSelectedType={setRole} />
+                            </div>
+                        </div>
+
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                                Team Name
+                                {role.name === "user" ? "Team" : "User"}  Name
                             </label>
                             <div className="mt-2">
                                 <input
@@ -125,14 +135,6 @@ export default function CreateUserModal({ onClose, onCreate }: any) {
                             </div>
                         </div>
 
-                        <div>
-                            <label htmlFor="submissionType" className="block text-sm font-medium leading-6 text-gray-900">
-                                Select User Role
-                            </label>
-                            <div className="mt-2">
-                                <SelectSubmissionType optionTypes={roleTypes} selectedType={role} setSelectedType={setRole} />
-                            </div>
-                        </div>
 
                         <div>
                             <button

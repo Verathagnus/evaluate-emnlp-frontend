@@ -19,8 +19,8 @@ const App: React.FC = () => {
         <Route path="evaluate" element={<EvaluationForm />} />
         <Route path="submissions" element={<ViewSubmissions />} />
 
+        <Route path="admin" element={<AdminLoginForm />} />
         <Route path="admin" element={<AdminNavbar />}>
-          <Route index element={<AdminLoginForm />} />
           <Route path="home" element={<AdminHome />} />
           <Route path="submissions" element={<ViewSubmissionsAdmin />} />
           <Route path="credentials" element={<ViewCredentialsAdmin />} />
