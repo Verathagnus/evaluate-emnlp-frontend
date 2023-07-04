@@ -5,7 +5,7 @@ import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from '../store';
 import { setCurrentCC } from '../store/navigationMenu/navigation';
-import Table, { CategoryCell, DownloadPDFIngredient, SelectDateFilter, TimeCell } from './table/table';
+import Table, { CategoryCell, DeleteCell, DownloadPDFIngredient, SelectDateFilter, TimeCell } from './table/table';
 import { Dialog } from '@headlessui/react';
 import LoginFormModal from './login-form-modal';
 import CreateUserModal from './create-user-modal';
@@ -22,12 +22,22 @@ const ViewCredentialsAdmin = () => {
 
     const fetchCredentialsAllPost = async () => {
         const access_token = window.sessionStorage.getItem("access_token");
-        return axios.get(VITE_SERVERURL+"/v1/users?limit=100000000&page=1", {
+        return axios.get(VITE_SERVERURL + "/v1/users?limit=100000000&page=1", {
             headers: {
                 'Authorization': `Bearer ${access_token}`
             }
         });
     }
+
+    const deleteCredentialPost = async (userId: string) => {
+        const access_token = window.sessionStorage.getItem("access_token");
+        return axios.delete(VITE_SERVERURL + "/v1/users/"+userId, {
+            headers: {
+                'Authorization': `Bearer ${access_token}`
+            }
+        });
+    }
+
     const setCredentialsData = async () => {
         try {
             setIsLoading(true);
@@ -130,6 +140,10 @@ const ViewCredentialsAdmin = () => {
                 Header: 'Role',
                 accessor: 'role',
             },
+            {
+                Header: 'Delete',
+                Cell: DeleteCell
+            }
         ],
         []
     );
@@ -139,14 +153,14 @@ const ViewCredentialsAdmin = () => {
             {showModal && (
                 <Dialog open={showModal} onClose={() => setShowModal(false)}>
                     <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
-                    
+
                     <div className="fixed inset-0 flex items-center justify-center overflow-scroll">
                         <div className="bg-white p-6">
                             <CreateUserModal onClose={() => setShowModal(false)} onCreate={() => {
                                 setShowModal(false);
                                 setIsLoading(true);
                                 fetchCredentialsAll();
-                            }}/>
+                            }} />
                         </div>
                     </div>
                 </Dialog>
@@ -200,7 +214,17 @@ const ViewCredentialsAdmin = () => {
                 // ))
                 <div className="">
                     <div className="">
-                        <Table columns={columns} data={sortedCredentials} />
+                        <Table columns={columns} data={sortedCredentials.map(cred => {
+                            return {
+                                ...cred, onDelete: () => {
+                                    console.log(cred['id'])
+                                    deleteCredentialPost(cred['id']).then(() => {
+                                        setIsLoading(true);
+                                        fetchCredentialsAll();
+                                    })
+                                }
+                            }
+                        })} />
                     </div>
                 </div>
             )}

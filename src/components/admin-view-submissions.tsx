@@ -5,7 +5,7 @@ import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from '../store';
 import { setCurrentVS } from '../store/navigationMenu/navigation';
-import Table, { CategoryCell, DownloadPDFIngredient, SelectDateFilter, TimeCell, ViewSelectedFile } from './table/table';
+import Table, { CategoryCell, DeleteCell, DownloadPDFIngredient, SelectDateFilter, TimeCell, ViewSelectedFile } from './table/table';
 import SelectSubmissionType from './select-submission-type';
 import SelectTranslationDirection from './select-translation-direction';
 const VITE_SERVERURL = import.meta.env.VITE_SERVERURL;
@@ -17,6 +17,15 @@ const ViewSubmissionsAdmin = () => {
     const [isLoading, setIsLoading] = useState(true);
     // const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
+
+    const deleteSubmissionPost = async (submissionId: string) => {
+        const access_token = window.sessionStorage.getItem("access_token");
+        return axios.delete(VITE_SERVERURL + "/v1/submissions/"+submissionId, {
+            headers: {
+                'Authorization': `Bearer ${access_token}`
+            }
+        });
+    }
 
     const fetchSubmissionsAllPost = async () => {
         const access_token = window.sessionStorage.getItem("access_token");
@@ -205,6 +214,10 @@ const ViewSubmissionsAdmin = () => {
                 Cell: ViewSelectedFile
             },
             {
+                Header: 'Delete',
+                Cell: DeleteCell
+            },
+            {
                 Header: 'BLEU',
                 accessor: 'BLEU',
             },
@@ -295,7 +308,17 @@ const ViewSubmissionsAdmin = () => {
                 // ))
                 <div className="">
                     <div className="">
-                        <Table columns={columns} data={sortedSubmissions} />
+                        <Table columns={columns} data={sortedSubmissions.map(submission => {
+                            return {
+                                ...submission, onDelete: () => {
+                                    console.log(submission['_id'])
+                                    deleteSubmissionPost(submission['_id']).then(() => {
+                                        setIsLoading(true);
+                                        fetchSubmissionsAll();
+                                    })
+                                }
+                            }
+                        })} />
                     </div>
                 </div>
             )}

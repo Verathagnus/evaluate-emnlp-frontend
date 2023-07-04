@@ -355,6 +355,82 @@ export function ViewFile({ value, column, row }: any) {
   );
 }
 
+export function DeleteCell({ value, column, row }: any) {
+  const [isOpen, setIsOpen] = useState(false);
+  const openModal = () => {
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+  };
+  return (
+    <>
+      <span className="px-3 py-1 uppercase leading-wide font-bold text-xs rounded-full shadow-sm ml-3 bg-red-100 text-red-600">
+        <button type="button" onClick={() => openModal()}>
+          Delete
+        </button>
+      </span>
+      <Transition.Root show={isOpen} as={React.Fragment}>
+        <Dialog
+          as="div"
+          className="fixed z-10 inset-0 overflow-y-auto"
+          onClose={closeModal}
+        >
+          <div className="flex items-center justify-center min-h-screen px-4">
+            <Transition.Child
+              as={React.Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
+            >
+              <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
+            </Transition.Child>
+
+            <Transition.Child
+              as={React.Fragment}
+              enter="ease-out duration-300"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="ease-in duration-200"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <div className="relative bg-white  w-[60rem] max-w-md mx-auto my-6">
+                <Dialog.Title className="text-lg font-bold mt-4 mx-6">
+                  Warning
+                </Dialog.Title>
+                <div className="px-6 py-4 whitespace-pre-line ">
+                  <p className="text-gray-800 overflow-scroll break-all whitespace-pre-line ">Are you sure you want to delete  {JSON.stringify(row.original)}</p>
+                </div>
+                <div className="flex justify-between items-center px-6 py-4 bg-gray-100">
+                  <button
+                    type="button"
+                    className="px-4 py-2 bg-red-500 rounded-lg text-white font-bold"
+                    onClick={row.original.onDelete}
+                  >
+                    Yes
+                  </button>
+                  <button
+                    type="button"
+                    className="px-4 py-2 bg-indigo-500 rounded-lg text-white font-bold"
+                    onClick={closeModal}
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+            </Transition.Child>
+          </div>
+        </Dialog>
+      </Transition.Root>
+    </>
+  );
+}
+
 export function ViewSelectedFile({ value, column, row }: any) {
   const [isOpen, setIsOpen] = useState(false);
   const [fileContent, setFileContent] = useState('');
