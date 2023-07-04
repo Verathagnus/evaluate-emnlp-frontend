@@ -132,10 +132,10 @@ const ViewCredentialsAdmin = () => {
                 Header: 'User Id',
                 accessor: 'id', // accessor is the "key" in the data
             },
-            {
-                Header: 'Email',
-                accessor: 'email',
-            },
+            // {
+            //     Header: 'Email',
+            //     accessor: 'email',
+            // },
             {
                 Header: 'Role',
                 accessor: 'role',
