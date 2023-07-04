@@ -1,3 +1,0 @@
-[[routers]]
-  handle = "app"
-  routes = [{ src = "/.*", dest = "/index.html" }]
