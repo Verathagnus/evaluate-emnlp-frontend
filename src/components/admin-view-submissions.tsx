@@ -5,7 +5,7 @@ import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from '../store';
 import { setCurrentVS } from '../store/navigationMenu/navigation';
-import Table, { CategoryCell, DeleteCell, DownloadPDFIngredient, SelectDateFilter, TimeCell, ViewSelectedFile } from './table/table';
+import Table, { CategoryCell, DeleteCell, DownloadPDFIngredient, SelectDateFilter, TimeCell, ViewSelectedFile, ViewSystemDescription } from './table/table';
 import SelectSubmissionType from './select-submission-type';
 import SelectTranslationDirection from './select-translation-direction';
 const VITE_SERVERURL = import.meta.env.VITE_SERVERURL;
@@ -210,8 +210,12 @@ const ViewSubmissionsAdmin = () => {
                 accessor: 'languageDirection',
             },
             {
-                Header: "View",
+                Header: "Submitted Output File",
                 Cell: ViewSelectedFile
+            },
+            {
+                Header: "System Description",
+                Cell: ViewSystemDescription
             },
             {
                 Header: 'Delete',
