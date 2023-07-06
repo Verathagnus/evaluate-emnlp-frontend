@@ -137,7 +137,7 @@ export default function EvaluationForm() {
             response = await evaluateResultPost(formData);
             // console.log(response.status)
             const { teamName: teamNameR, submissionType, languageDirection, BLEU, Chrf2, ribes_score, ter_score } = response.data;
-            setResult(`${teamNameR}\n${submissionType}\n${languageDirection}\n\nBLEU: ${BLEU}\nChrf2: ${Chrf2}\nRIBES: ${ribes_score}\nTER ${ter_score}`);
+            setResult(`${teamNameR}\n${submissionType}\n${languageDirection}\n\nBLEU: ${BLEU}\nChrf2: ${Chrf2}\nRIBES: ${ribes_score}\nTER: ${ter_score}`);
             scrollToBottom();
         }
         catch (err: any | AxiosError) {
@@ -145,10 +145,10 @@ export default function EvaluationForm() {
                 await refreshTokenPost();
                 response = await evaluateResultPost(formData);
                 // const { teamName, submissionType, languageDirection, BLEU, Chrf2, ribes_score, ter_score } = response.data;
-                // setResult(`${teamName}\n${submissionType}\n${languageDirection}\n\nBLEU: ${BLEU}\nChrf2: ${Chrf2}\nRIBES: ${ribes_score}\nTER ${ter_score}`);
+                // setResult(`${teamName}\n${submissionType}\n${languageDirection}\n\nBLEU: ${BLEU}\nChrf2: ${Chrf2}\nRIBES: ${ribes_score}\nTER: ${ter_score}`);
                 console.log(response.status)
                 const { teamName: teamNameR, submissionType, languageDirection, BLEU, Chrf2, ribes_score, ter_score } = response.data;
-                setResult(`${teamNameR}\n${submissionType}\n${languageDirection}\n\nBLEU: ${BLEU}\nChrf2: ${Chrf2}\nRIBES: ${ribes_score}\nTER ${ter_score}`);
+                setResult(`${teamNameR}\n${submissionType}\n${languageDirection}\n\nBLEU: ${BLEU}\nChrf2: ${Chrf2}\nRIBES: ${ribes_score}\nTER: ${ter_score}`);
                 scrollToBottom();
             }
             if (err?.response?.status === 500) {
@@ -182,23 +182,23 @@ export default function EvaluationForm() {
             console.log(response.status)
             console.log(response.status)
             const { teamName: teamNameR, submissionType, languageDirection, BLEU, Chrf2, ribes_score, ter_score } = response.data;
-            setResult(`${teamNameR}\n${submissionType}\n${languageDirection}\n\nBLEU: ${BLEU}\nChrf2: ${Chrf2}\nRIBES: ${ribes_score}\nTER ${ter_score}`);
+            setResult(`${teamNameR}\n${submissionType}\n${languageDirection}\n\nBLEU: ${BLEU}\nChrf2: ${Chrf2}\nRIBES: ${ribes_score}\nTER: ${ter_score}`);
             setSubmitMessage("Result has been saved");
         }
         catch (err: any | AxiosError) {
             if (err?.response?.status === 500) {
                 setSubmitMessage(err?.response?.data?.message);
                 // const { teamName, submissionType, languageDirection, BLEU, Chrf2, ribes_score, ter_score } = response.data;
-                // setResult(`${teamName}\n${submissionType}\n${languageDirection}\n\nBLEU: ${BLEU}\nChrf2: ${Chrf2}\nRIBES: ${ribes_score}\nTER ${ter_score}`);
+                // setResult(`${teamName}\n${submissionType}\n${languageDirection}\n\nBLEU: ${BLEU}\nChrf2: ${Chrf2}\nRIBES: ${ribes_score}\nTER: ${ter_score}`);
             }
             if (err?.response?.status === 401) {
                 await refreshTokenPost();
                 response = await saveResultPost(formData);
                 // const { teamName, submissionType, languageDirection, BLEU, Chrf2, ribes_score, ter_score } = response.data;
-                // setResult(`${teamName}\n${submissionType}\n${languageDirection}\n\nBLEU: ${BLEU}\nChrf2: ${Chrf2}\nRIBES: ${ribes_score}\nTER ${ter_score}`);
+                // setResult(`${teamName}\n${submissionType}\n${languageDirection}\n\nBLEU: ${BLEU}\nChrf2: ${Chrf2}\nRIBES: ${ribes_score}\nTER: ${ter_score}`);
                 console.log(response.status)
                 const { teamName: teamNameR, submissionType, languageDirection, BLEU, Chrf2, ribes_score, ter_score } = response.data;
-                setResult(`${teamNameR}\n${submissionType}\n${languageDirection}\n\nBLEU: ${BLEU}\nChrf2: ${Chrf2}\nRIBES: ${ribes_score}\nTER ${ter_score}`);
+                setResult(`${teamNameR}\n${submissionType}\n${languageDirection}\n\nBLEU: ${BLEU}\nChrf2: ${Chrf2}\nRIBES: ${ribes_score}\nTER: ${ter_score}`);
                 setSubmitMessage("Result has been saved");
             }
             if (err?.response?.status === 400) {
