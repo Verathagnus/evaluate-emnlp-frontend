@@ -404,7 +404,7 @@ export function DeleteCell({ value, column, row }: any) {
                   Warning
                 </Dialog.Title>
                 <div className="px-6 py-4 whitespace-pre-line ">
-                  <p className="text-gray-800 overflow-scroll break-all whitespace-pre-line ">Are you sure you want to delete  {JSON.stringify(row.original)}</p>
+                  <p className="text-gray-800 overflow-scroll break-all whitespace-pre-line ">Are you sure you want to delete this entry?</p>
                 </div>
                 <div className="flex justify-between items-center px-6 py-4 bg-gray-100">
                   <button
