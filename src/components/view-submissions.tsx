@@ -4,6 +4,9 @@ import axios, { AxiosError } from "axios";
 // import LoginFormModal from "./login-form-modal";
 import { useNavigate } from "react-router-dom";
 import { Dialog, Transition } from '@headlessui/react';
+import Table, { CategoryCell, DeleteCell, DownloadPDFIngredient, SelectDateFilter, TimeCell, ViewSelectedFile, ViewSystemDescription } from './table/table';
+import SelectSubmissionType from './select-submission-type';
+import SelectTranslationDirection from './select-translation-direction';
 const VITE_SERVERURL = import.meta.env.VITE_SERVERURL;
 
 const Submission = ({
@@ -277,6 +280,66 @@ const ViewSubmissions = () => {
         setSortType(e.target.value);
     };
 
+    const submissionTypes = [
+        {
+            id: 0,
+            name: '',
+        },
+        {
+            id: 1,
+            name: 'PRIMARY',
+        },
+        {
+            id: 2,
+            name: 'CONTRASTIVE-1',
+        },
+        {
+            id: 3,
+            name: 'CONTRASTIVE-2',
+        },
+    ]
+    const [selectedSubmissionType, setSelectedSubmissionType] = useState(submissionTypes[0])
+
+    const translationDirectionOptions = [
+        {
+            id: 0,
+            name: '',
+        },
+        {
+            id: 1,
+            name: 'English-to-Assamese',
+        },
+        {
+            id: 2,
+            name: 'Assamese-to-English',
+        },
+        {
+            id: 3,
+            name: 'English-to-Mizo',
+        },
+        {
+            id: 4,
+            name: 'Mizo-to-English',
+        },
+        {
+            id: 5,
+            name: 'English-to-Khasi',
+        },
+        {
+            id: 6,
+            name: 'Khasi-to-English',
+        },
+        {
+            id: 7,
+            name: 'English-to-Manipuri',
+        },
+        {
+            id: 8,
+            name: 'Manipuri-to-English',
+        },
+    ]
+    const [selectedTranslationDirection, setSelectedTranslationDirection] = useState(translationDirectionOptions[0]);
+
     const filteredSubmissions = submissions.filter((submission: any) =>
         submission.teamName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         submission.submissionType.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -285,7 +348,8 @@ const ViewSubmissions = () => {
         submission.Chrf2.toLowerCase().includes(searchTerm.toLowerCase()) ||
         submission.ribes_score.toLowerCase().includes(searchTerm.toLowerCase()) ||
         submission.ter_score.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    ).filter((submission: any) =>
+        submission.submissionType.toLowerCase().includes(selectedSubmissionType.name.toLowerCase()) && submission.languageDirection.toLowerCase().includes(selectedTranslationDirection.name.toLowerCase()));
 
     const sortedSubmissions = [...filteredSubmissions].sort((a, b) => {
         if (sortType === 'teamName') {
@@ -316,6 +380,72 @@ const ViewSubmissions = () => {
         return 0;
     });
 
+    const columns = React.useMemo(
+        () => [
+            // {
+            //     Header: "Category",
+            //     accessor: "category",
+            //     Cell: CategoryCell,
+            //     Filter: SelectDateFilter,
+            //     filter: 'includes',
+            // },
+            // {
+            //     Header: "Time To Cook",
+            //     accessor: "timeToCook",
+            //     Cell: TimeCell
+            // },
+            // {
+            //     Header: "Image",
+            //     accessor: "uploadedRecipeImageFileName",
+            //     Cell: DownloadPDFIngredient,
+            //     flagAccessor: "uploadedRecipeImageFlag",
+            // },
+            {
+                Header: 'Team Name',
+                accessor: 'teamName', // accessor is the "key" in the data
+            },
+            {
+                Header: 'Submission Type',
+                accessor: 'submissionType',
+            },
+            {
+                Header: 'Language Direction',
+                accessor: 'languageDirection',
+            },
+
+            {
+                Header: 'BLEU',
+                accessor: 'BLEU',
+            },
+            {
+                Header: 'Chrf2',
+                accessor: 'Chrf2',
+            },
+            {
+                Header: 'RIBES',
+                accessor: 'ribes_score',
+            },
+            {
+                Header: 'TER',
+                accessor: 'ter_score',
+            },
+            {
+                Header: 'Date Submitted',
+                accessor: 'dateCreated',
+                Cell: ({ value }: any) => new Date(value).toLocaleString(),
+            },
+            {
+                Header: "Submitted Output File",
+                Cell: ViewSelectedFile
+            },
+            {
+                Header: "System Description",
+                Cell: ViewSystemDescription
+            },
+        ],
+        []
+    );
+
     return (
         <>
             {/* {showModal && (
@@ -345,6 +475,8 @@ const ViewSubmissions = () => {
 
                     </div>
                 </header>
+            </div>
+            <div className="flex min-h-full flex-1 flex-col justify-center px-6  lg:px-8 my-5 sm:mx-auto sm:w-full sm:max-w-[70rem]">
                 <div className="flex flex-row justify-between">
                     <div className="mb-4">
                         <input
@@ -374,7 +506,14 @@ const ViewSubmissions = () => {
                             {/* Add more sort options if needed */}
                         </select>
                     </div>
+                    <div className="mb-4 w-[12rem]">
+                        <SelectSubmissionType optionTypes={submissionTypes} selectedType={selectedSubmissionType} setSelectedType={setSelectedSubmissionType} />
+                    </div>
+                    <div className="mb-4">
+                        <SelectTranslationDirection optionTypes={translationDirectionOptions} selectedType={selectedTranslationDirection} setSelectedType={setSelectedTranslationDirection} />
+                    </div>
                 </div>
+
 
                 {isLoading ? (
                     <div className="absolute h-screen flex justify-center items-center text-center py-4 top-0 left-0 w-screen"><div role="status">
@@ -385,11 +524,11 @@ const ViewSubmissions = () => {
                         <span className="sr-only">Loading...</span>
                     </div></div>
                 ) : (
-                    sortedSubmissions.map((submission) => (
-                        <Submission key={submission.id} {...submission} />
-                    ))
+                    <div className="">
+                    <Table columns={columns} data={sortedSubmissions} />
+                    </div>
                 )}
-            </div>
+            </div >
         </>
     );
 };
