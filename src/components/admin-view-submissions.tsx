@@ -124,7 +124,7 @@ const ViewSubmissionsAdmin = () => {
         },
         {
             id: 6,
-            name: 'Kha-to-English',
+            name: 'Khasi-to-English',
         },
         {
             id: 7,

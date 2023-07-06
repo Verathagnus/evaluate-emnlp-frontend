@@ -51,7 +51,7 @@ export default function UploadReferenceForm({ onClose, onCreate }: any) {
         },
         {
             id: 6,
-            name: 'Kha-to-English',
+            name: 'Khasi-to-English',
         },
         {
             id: 7,
