@@ -20,7 +20,7 @@ const ViewSubmissionsAdmin = () => {
 
     const deleteSubmissionPost = async (submissionId: string) => {
         const access_token = window.sessionStorage.getItem("access_token");
-        return axios.delete(VITE_SERVERURL + "/v1/submissions/"+submissionId, {
+        return axios.delete(VITE_SERVERURL + "/v1/submissions/" + submissionId, {
             headers: {
                 'Authorization': `Bearer ${access_token}`
             }
@@ -209,18 +209,7 @@ const ViewSubmissionsAdmin = () => {
                 Header: 'Language Direction',
                 accessor: 'languageDirection',
             },
-            {
-                Header: "Submitted Output File",
-                Cell: ViewSelectedFile
-            },
-            {
-                Header: "System Description",
-                Cell: ViewSystemDescription
-            },
-            {
-                Header: 'Delete',
-                Cell: DeleteCell
-            },
+
             {
                 Header: 'BLEU',
                 accessor: 'BLEU',
@@ -241,6 +230,18 @@ const ViewSubmissionsAdmin = () => {
                 Header: 'Date Submitted',
                 accessor: 'dateCreated',
                 Cell: ({ value }: any) => new Date(value).toLocaleString(),
+            },
+            {
+                Header: "Submitted Output File",
+                Cell: ViewSelectedFile
+            },
+            {
+                Header: "System Description",
+                Cell: ViewSystemDescription
+            },
+            {
+                Header: 'Delete',
+                Cell: DeleteCell
             },
         ],
         []
