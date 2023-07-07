@@ -49,11 +49,21 @@ export default function LoginForm() {
             id: 2,
             name: 'Participant',
         },
+        {
+            id: 3,
+            name: 'Human Evaluator',
+        },
     ]
     const [selectedLoginType, setSelectedLoginType] = useState(loginTypes[0])
 
     useEffect(() => {
-        if (selectedLoginType.name !== "Admin") {
+        if (selectedLoginType.id === 1) {
+            navigate("/admin")
+        }
+        else if (selectedLoginType.id === 3) {
+            navigate("/humanEvaluationLogin")
+        }
+        else{
             navigate("/")
         }
     }, [selectedLoginType])
@@ -77,7 +87,7 @@ export default function LoginForm() {
                     <form className="space-y-6" onSubmit={handleUserLogin}>
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                                Team Name
+                                User Name
                             </label>
                             <div className="mt-2">
                                 <input

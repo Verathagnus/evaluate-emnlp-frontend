@@ -1,32 +1,17 @@
 import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import SelectSubmissionType from "./select-submission-type";
 const VITE_SERVERURL = import.meta.env.VITE_SERVERURL;
 
-export default function LoginForm() {
+export default function HumanEvaluatorLoginForm() {
     const [teamName, setTeamName] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-    const loginTypes = [
-        {
-            id: 1,
-            name: 'Admin',
-        },
-        {
-            id: 2,
-            name: 'Participant',
-        },
-        {
-            id: 3,
-            name: 'Human Evaluator',
-        },
-    ]
-    const [selectedLoginType, setSelectedLoginType] = useState(loginTypes[1])
     const navigate = useNavigate();
     const loginUserPost = (formData: any) => {
-        return axios.post(VITE_SERVERURL + '/v1/auth/loginWithTeamName', formData)
+        return axios.post(VITE_SERVERURL + '/v1/auth/loginWithTeamNameHumanEvaluator', formData)
     }
     const handleUserLogin = async (e: React.ChangeEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -42,18 +27,35 @@ export default function LoginForm() {
             window.sessionStorage.setItem("access_token", loginResponse.data.tokens.access.token);
             window.sessionStorage.setItem("refresh_token", loginResponse.data.tokens.refresh.token);
             console.log(window.sessionStorage.getItem("access_token"));
-            // if(selectedLoginType.name === "Admin"){
-            // navigate("/admin/home");
-            // }
-            // else{
-                navigate("/evaluate");
-            // }
-        } catch (error) {
+            navigate("/humanEvaluationTasksList");
+        } catch (error: any | AxiosError) {
             setLoading(false);
-            console.error("Error logging in:", error);
-            setErrorMessage("Authentication failed. Please check your credentials."); // Set error message
+            // console.error("Error logging in:", error);
+            if (error?.response?.status === 401) {
+                if (error?.response?.statusText.toLocaleLowerCase() === "Unauthorized".toLocaleLowerCase())
+                    setErrorMessage("Authentication failed. Please sign in as human evaluator or admin"); // Set error message
+            }
+            else
+                setErrorMessage("Authentication failed. Please check your credentials."); // Set error message
         }
     }
+
+    const loginTypes = [
+        {
+            id: 1,
+            name: 'Admin',
+        },
+        {
+            id: 2,
+            name: 'Participant',
+        },
+        {
+            id: 3,
+            name: 'Human Evaluator',
+        },
+    ]
+    const [selectedLoginType, setSelectedLoginType] = useState(loginTypes[2])
+
     useEffect(() => {
         if (selectedLoginType.id === 1) {
             navigate("/admin")
@@ -65,16 +67,16 @@ export default function LoginForm() {
             navigate("/")
         }
     }, [selectedLoginType])
+
     return (
         <>
             <header className="mt-10 text-center text-lg  leading-9 tracking-tight text-gray-900">
                 <h2> EMNLP 2023 EIGHTH CONFERENCE ON MACHINE TRANSLATION (WMT23)</h2>
                 <h2> Shared Task: Low-Resource Indic Language Translation</h2>
-                <h1 className="text-2xl font-bold"> Evaluation</h1>
+                <h1 className="text-2xl font-bold">Human Evaluation</h1>
             </header>
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm flex flex-row justify-between">
-
                     <h2 className=" text-center text-2xl font-bold leading-9 tracking-tight text-gray-900  items-center ">
                         Select Login Type
                     </h2>
@@ -85,7 +87,7 @@ export default function LoginForm() {
                     <form className="space-y-6" onSubmit={handleUserLogin}>
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                                Team Name
+                                User Name
                             </label>
                             <div className="mt-2">
                                 <input

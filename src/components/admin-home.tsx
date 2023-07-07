@@ -31,6 +31,13 @@ const links = [
         name: "References Manager",
         redirectLink: "/admin/references",
     },
+    {
+        description: "Manage Human Evaluation Tasks",
+        image: "https://ganasurakshaparty.in/assets/membershipForm.885bdc88.png",
+        imageAlt: "References",
+        name: "Evaluation Tasks",
+        redirectLink: "/admin/humanEvaluationTasksList",
+    },
 ];
 
 const AdminHome = () => {

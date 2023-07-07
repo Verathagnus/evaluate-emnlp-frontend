@@ -43,7 +43,7 @@ const CustomFileInput = (props: any) => {
                             key={i}
                             className=" whitespace-nowrap flex flex-row justify-between"
                         >
-                            <div className="text-violet-500">{file.name}</div>
+                            <div className="text-violet-500">{file.name.length > 35 ? file.name.slice(0, 35)+"..." : file.name}</div>
                             <button type="button" onClick={() => setSelectedFiles([])}>
                                 <XMarkIcon className="w-6 h-6 text-red-500" />
                             </button>

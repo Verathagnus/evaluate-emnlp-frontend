@@ -248,7 +248,7 @@ export function ViewFile({ value, column, row }: any) {
 
   const closeModal = () => {
     setIsOpen(false)
-    // setFileContent('')
+    setFileContent('')
   }
 
   const getReferenceFilePost = async () => {
@@ -435,41 +435,6 @@ export function DeleteCell({ value, column, row }: any) {
   )
 }
 
-export function EvaluateCellHumanEvaluator({ value, column, row }: any) {
-  const navigate = useNavigate()
-  return (
-    <>
-      {row.original.evaluationStatus === 'unevaluated' ? (
-        <span className="leading-wide rounded-full  bg-blue-100 px-3 py-1 text-xs font-bold uppercase text-blue-600 shadow-sm">
-          <button
-            type="button"
-            onClick={() => navigate(`/humanEvaluationTask/${row.original._id}`)}
-          >
-            Start Task
-          </button>
-        </span>
-      ) : (
-        <span className="leading-wide rounded-full  bg-teal-100 px-3 py-1 text-xs font-bold uppercase text-teal-600 shadow-sm">
-          <button
-            type="button"
-            onClick={() => navigate(`/humanEvaluationTask/${row.original._id}`)}
-          >
-            Score: 
-            <span className='ml-2'>
-              {(
-                row.original.overallScore.reduce(
-                  (acc: number, e: any) => acc + parseInt(e),
-                  0
-                ) / row.original.overallScore.length
-              ).toFixed(2)}
-            </span>
-          </button>
-        </span>
-      )}
-    </>
-  )
-}
-
 export function EvaluateCell({ value, column, row }: any) {
   const navigate = useNavigate()
   return (
@@ -493,15 +458,7 @@ export function EvaluateCell({ value, column, row }: any) {
               navigate(`/admin/humanEvaluationTask/${row.original._id}`)
             }
           >
-            Score: 
-            <span className='ml-2'>
-              {(
-                row.original.overallScore.reduce(
-                  (acc: number, e: any) => acc + parseInt(e),
-                  0
-                ) / row.original.overallScore.length
-              ).toFixed(2)}
-            </span>
+            View Result
           </button>
         </span>
       )}
@@ -519,7 +476,7 @@ export function ViewSelectedFile({ value, column, row }: any) {
 
   const closeModal = () => {
     setIsOpen(false)
-    // setFileContent('')
+    setFileContent('')
   }
 
   const downloadFile = () => {
@@ -616,7 +573,7 @@ export function ViewSystemDescription({ value, column, row }: any) {
 
   const closeModal = () => {
     setIsOpen(false)
-    // setFileContent('')
+    setFileContent('')
   }
 
   const downloadFile = () => {
@@ -716,7 +673,7 @@ export function ViewPredictedFile({ value, column, row }: any) {
 
   const closeModal = () => {
     setIsOpen(false)
-    // setFileContent('')
+    setFileContent('')
   }
 
   const downloadFile = () => {
@@ -814,7 +771,7 @@ export function ViewReferenceFile({ value, column, row }: any) {
 
   const closeModal = () => {
     setIsOpen(false)
-    // setFileContent('')
+    setFileContent('')
   }
 
   const downloadFile = () => {
@@ -1055,7 +1012,7 @@ function Table({ columns, data }: any) {
         </div>
       </div>
       {/* Pagination */}
-      <div className="flex items-center justify-between py-3">
+      {/* <div className="flex items-center justify-between py-3">
         <div className="flex flex-1 justify-between sm:hidden">
           <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
             Previous
@@ -1149,7 +1106,7 @@ function Table({ columns, data }: any) {
             </nav>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }
