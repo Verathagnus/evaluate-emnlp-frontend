@@ -16,6 +16,10 @@ export default function CreateUserModal({ onClose, onCreate }: any) {
             id: 2,
             name: 'admin',
         },
+        {
+            id: 3,
+            name: 'humanEvaluator',
+        },
     ]
     const [role, setRole] = useState(roleTypes[0])
     const [password, setPassword] = useState("");
