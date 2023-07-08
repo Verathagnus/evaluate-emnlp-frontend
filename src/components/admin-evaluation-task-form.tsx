@@ -110,8 +110,33 @@ export default function AdminEvaluationTaskForm({ onClose, onCreate }: any) {
         navigate("/admin");
     }
   }
+  const countLinesFile = async (file: File) => {
+    const CHUNK_SIZE = 1024 * 1024;
+    const decoder = new TextDecoder();
+    let lineCount = 0;
+    let offset = 0;
+  
+    while (offset < file.size) {
+      const chunk = file.slice(offset, offset + CHUNK_SIZE);
+      const buffer = await chunk.arrayBuffer();
+      const text = decoder.decode(buffer);
+      const newLines = text.match(/\n/g);
+      lineCount += newLines ? newLines.length : 0;
+      offset += CHUNK_SIZE;
+    }
+  
+    return lineCount + 1;
+  };
+  
+
   const handleSubmitResult = async (e: React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const predFileLines = await countLinesFile(predictedFiles[0]);
+    const refFileLines = await countLinesFile(referenceFiles[0]);
+    if(predFileLines !== refFileLines){
+      setErrorMessage("Number of lines in predicted file is "+predFileLines+" and in reference file is "+refFileLines+"\nPlease check");
+      return;
+    }
     // console.log(teamName, selectedSubmissionType["name"], selectedTranslationDirection["name"]);
     if (predictedFiles.length === 0) {
       setErrorMessage(`Please upload a predicted file`)
