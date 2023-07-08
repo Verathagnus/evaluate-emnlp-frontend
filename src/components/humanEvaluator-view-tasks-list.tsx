@@ -14,6 +14,7 @@ import SelectSubmissionType from './select-submission-type'
 import SelectTranslationDirection from './select-translation-direction'
 import { Dialog } from '@headlessui/react'
 import AdminEvaluationTaskForm from './admin-evaluation-task-form'
+import HumanEvaluationTaskForm from './human-evaluation-task-form'
 const VITE_SERVERURL = import.meta.env.VITE_SERVERURL
 
 const AdminHumanEvaluatorViewTasksList = () => {
@@ -180,10 +181,10 @@ const AdminHumanEvaluatorViewTasksList = () => {
       //     Cell: DownloadPDFIngredient,
       //     flagAccessor: "uploadedRecipeImageFlag",
       // },
-    //   {
-    //     Header: 'Team Name',
-    //     accessor: 'teamName', // accessor is the "key" in the data
-    //   },
+      {
+        Header: 'Team Name',
+        accessor: 'teamName', // accessor is the "key" in the data
+      },
       {
         Header: 'Language Direction',
         accessor: 'translationDirection',
@@ -233,7 +234,7 @@ const AdminHumanEvaluatorViewTasksList = () => {
 
           <div className="fixed inset-0 flex flex-col items-center justify-center  ">
             <div className="overflow-y-scroll bg-white p-6">
-              <AdminEvaluationTaskForm
+              <HumanEvaluationTaskForm
                 onClose={() => setShowModal(false)}
                 onCreate={() => {
                   setShowModal(false)
@@ -277,7 +278,7 @@ const AdminHumanEvaluatorViewTasksList = () => {
               setSelectedType={setSelectedTranslationDirection}
             />
           </div>
-          {/* <div className="h-full">
+          <div className="h-full">
             <button
               className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               onClick={() => {
@@ -286,7 +287,7 @@ const AdminHumanEvaluatorViewTasksList = () => {
             >
               Create New Task
             </button>
-          </div> */}
+          </div>
         </div>
       </div>
       {isLoading ? (

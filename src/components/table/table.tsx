@@ -508,6 +508,46 @@ export function EvaluateCell({ value, column, row }: any) {
     </>
   )
 }
+
+export function EvaluateCellAdmin({ value, column, row }: any) {
+  const navigate = useNavigate()
+  return (
+    <>
+      {row.original.evaluationStatus === 'unevaluated' ? (
+        <span className="leading-wide rounded-full  bg-blue-100 px-3 py-1 text-xs font-bold uppercase text-blue-600 shadow-sm">
+          <button
+            type="button"
+            onClick={() =>
+              navigate(`/admin/humanEvaluationTask/${row.original._id}`)
+            }
+          >
+            Not Evaluated
+          </button>
+        </span>
+      ) : (
+        <span className="leading-wide rounded-full  bg-teal-100 px-3 py-1 text-xs font-bold uppercase text-teal-600 shadow-sm">
+          <button
+            type="button"
+            onClick={() =>
+              navigate(`/admin/humanEvaluationTask/${row.original._id}`)
+            }
+          >
+            Score: 
+            <span className='ml-2'>
+              {(
+                row.original.overallScore.reduce(
+                  (acc: number, e: any) => acc + parseInt(e),
+                  0
+                ) / row.original.overallScore.length
+              ).toFixed(2)}
+            </span>
+          </button>
+        </span>
+      )}
+    </>
+  )
+}
+
 export function ViewSelectedFile({ value, column, row }: any) {
   const [isOpen, setIsOpen] = useState(false)
   const [fileContent, setFileContent] = useState('')

@@ -5,7 +5,7 @@ import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from '../store';
 import { setCurrentHETL } from '../store/navigationMenu/navigation';
-import Table, { ViewPredictedFile, ViewReferenceFile, DeleteCell, EvaluateCell } from './table/table';
+import Table, { ViewPredictedFile, ViewReferenceFile, DeleteCell, EvaluateCellAdmin } from './table/table';
 import SelectSubmissionType from './select-submission-type';
 import SelectTranslationDirection from './select-translation-direction';
 import { Dialog } from '@headlessui/react';
@@ -161,6 +161,10 @@ const AdminHumanEvaluatorViewTasksList = () => {
             //     flagAccessor: "uploadedRecipeImageFlag",
             // },
             {
+                Header: 'Evaluator Name',
+                accessor: 'evaluatedByTeamName', // accessor is the "key" in the data
+            },
+            {
                 Header: 'Team Name',
                 accessor: 'teamName', // accessor is the "key" in the data
             },
@@ -177,8 +181,8 @@ const AdminHumanEvaluatorViewTasksList = () => {
                 Cell: ViewReferenceFile,
             },
             {
-                Header: 'Evaluate',
-                Cell: EvaluateCell
+                Header: 'Score',
+                Cell: EvaluateCellAdmin
             },
             {
                 Header: 'Date Submitted',
@@ -207,7 +211,7 @@ const AdminHumanEvaluatorViewTasksList = () => {
 
     return (
         <>
-            {showModal && (
+            {/* {showModal && (
                 <Dialog open={showModal} onClose={() => setShowModal(false)}>
                     <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
 
@@ -221,7 +225,7 @@ const AdminHumanEvaluatorViewTasksList = () => {
                         </div>
                     </div>
                 </Dialog>
-            )}
+            )} */}
             <div className="flex min-h-full flex-1 flex-col justify-center px-6  lg:px-8 my-5 sm:mx-auto sm:w-full ">
                 <div className="sm:flex justify-between">
                     <div className="mb-4">
@@ -250,11 +254,11 @@ const AdminHumanEvaluatorViewTasksList = () => {
                     <div className="mb-4">
                         <SelectTranslationDirection optionTypes={translationDirectionOptions} selectedType={selectedTranslationDirection} setSelectedType={setSelectedTranslationDirection} />
                     </div>
-                    <div className="h-full">
+                    {/* <div className="h-full">
                         <button className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" onClick={() => {
                             setShowModal(true);
                         }}>Create New Task</button>
-                    </div>
+                    </div> */}
                 </div>
 
             </div>

@@ -215,25 +215,7 @@ const AdminHumanEvaluatorViewTask = () => {
 
   return (
     <div>
-      {showModal && (
-        <Dialog open={showModal} onClose={() => setShowModal(false)}>
-          <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
-          <div className="fixed inset-0 flex items-center justify-center">
-            <div className="bg-white p-6">
-              <AdminLoginFormModal
-                onClose={() => setShowModal(false)}
-                onSubmit={() => {
-                  setShowModal(false)
-                  if (submissions.length === 0) {
-                    setIsLoading(true)
-                    setSubmissionsData()
-                  }
-                }}
-              />
-            </div>
-          </div>
-        </Dialog>
-      )}
+      
       {viewSubmittedDetails ? (
         <div className="m-10 mb-4 rounded-lg bg-purple-100 p-4 shadow-md">
           <p className="text-purple-800">
@@ -262,10 +244,10 @@ const AdminHumanEvaluatorViewTask = () => {
         </div>
       ) : (
         <div className="m-10 mb-4 rounded-lg bg-purple-100 p-4 shadow-md">
-          <p>This task has not been submitted yet</p>
+          <p>This task has not been evaluated yet</p>
         </div>
       )}
-      {isLoading ? (
+      {/* {isLoading ? (
         <div>Loading...</div>
       ) : (
         <form onSubmit={handleSubmit}>
@@ -285,7 +267,7 @@ const AdminHumanEvaluatorViewTask = () => {
             Submit
           </button>
         </form>
-      )}
+      )} */}
     </div>
   )
 }
