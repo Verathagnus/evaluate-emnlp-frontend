@@ -41,7 +41,8 @@ const AdminHumanEvaluatorViewTasksList = () => {
   const fetchSubmissionsAllPost = async () => {
     const access_token = window.sessionStorage.getItem('access_token')
     return axios.post(
-      VITE_SERVERURL + '/v1/humanEvaluations/humanEvaluator/fetchEvaluationsAll',
+      VITE_SERVERURL +
+        '/v1/humanEvaluations/humanEvaluator/fetchEvaluationsAll',
       {},
       {
         headers: {
@@ -132,12 +133,11 @@ const AdminHumanEvaluatorViewTasksList = () => {
     useState(translationDirectionOptions[0])
 
   const filteredSubmissions = submissions
-    .filter(
-      (submission: any) =>
-        // submission.teamName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        submission.translationDirection
-          .toLowerCase()
-          .includes(searchTerm.toLowerCase())
+    .filter((submission: any) =>
+      // submission.teamName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      submission.translationDirection
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
     )
     .filter((submission: any) =>
       submission.translationDirection
@@ -206,10 +206,10 @@ const AdminHumanEvaluatorViewTasksList = () => {
         accessor: 'createdAt',
         Cell: ({ value }: any) => new Date(value).toLocaleString(),
       },
-    //   {
-    //     Header: 'Delete',
-    //     Cell: DeleteCell,
-    //   },
+      //   {
+      //     Header: 'Delete',
+      //     Cell: DeleteCell,
+      //   },
       // {
       //     Header: "Submitted Output File",
       //     Cell: ViewSelectedFile
@@ -289,6 +289,70 @@ const AdminHumanEvaluatorViewTasksList = () => {
             </button>
           </div>
         </div>
+      </div>
+      <div className="bg-purpl-100 m-12  mb-4 border border-black p-4 shadow-md">
+        <h1 className="text-[18px]">Rating Scale For Adequacy and Fluency: </h1>
+        <div>
+          <span className="text-[18px]">Adequacy:</span>{' '}
+          <span className="text-[11.5px] text-[#555]">
+            A typical scale used to measure adequacy is based on the question
+            “How much meaning is preserved?”
+          </span>
+        </div>
+        
+        <table className='table-rating-description'>
+          <thead className='text-[11px]'>
+            <td>Rating: </td>
+            <td>Description </td>
+          </thead>
+          <tbody className='text-[#555] text-[11.5px]'>
+            <tr>
+              <td>5:</td> <td>All meaning</td>
+            </tr>
+            <tr>
+              <td>4:</td> <td>Most meaning</td>
+            </tr>
+            <tr>
+              <td>3:</td> <td>Some meaning</td>
+            </tr>
+            <tr>
+              <td>2:</td> <td>Little meaning</td>
+            </tr>
+            <tr>
+              <td>1:</td> <td>None</td>
+            </tr>
+          </tbody>
+        </table>
+        <div>
+          <span className="text-[18px]">Fluency:</span>{' '}
+          <span className="text-[11.5px] text-[#555]">
+            A typical scale used to measure fluency is based on the question “Is
+            the language in the output fluent?”
+          </span>
+        </div>
+        <table className='table-rating-description'>
+          <thead className='text-[11px]'>
+            <td>Rating: </td>
+            <td>Description </td>
+          </thead>
+          <tbody className='text-[#555] text-[11.5px]'>
+            <tr>
+              <td>5:</td> <td>Flawless</td>
+            </tr>
+            <tr>
+              <td>4:</td> <td>Good</td>
+            </tr>
+            <tr>
+              <td>3:</td> <td>Non-native</td>
+            </tr>
+            <tr>
+              <td>2:</td> <td>Disfluent</td>
+            </tr>
+            <tr>
+              <td>1:</td> <td>Incomprehensible</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       {isLoading ? (
         <div className="absolute left-0 top-0 flex h-screen w-screen items-center justify-center py-4 text-center">
