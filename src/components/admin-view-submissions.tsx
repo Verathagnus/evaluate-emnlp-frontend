@@ -41,7 +41,7 @@ const ViewSubmissionsAdmin = () => {
             const response = await fetchSubmissionsAllPost();
             // const data = await response.json();
             console.log(response.data);
-            setSubmissions(response.data);
+            setSubmissions(response.data.results);
             setIsLoading(false);
         } catch (err: any | AxiosError) {
             if (err?.response?.status === 401) {
@@ -316,8 +316,8 @@ const ViewSubmissionsAdmin = () => {
                         <Table columns={columns} data={sortedSubmissions.map(submission => {
                             return {
                                 ...submission, onDelete: () => {
-                                    console.log(submission['_id'])
-                                    deleteSubmissionPost(submission['_id']).then(() => {
+                                    console.log(submission['id'])
+                                    deleteSubmissionPost(submission['id']).then(() => {
                                         setIsLoading(true);
                                         fetchSubmissionsAll();
                                     })

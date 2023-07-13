@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   useTable,
   useFilters,
@@ -646,31 +646,37 @@ export function ViewSelectedFile({ value, column, row }: any) {
 }
 
 export function ViewSystemDescription({ value, column, row }: any) {
-  const [isOpen, setIsOpen] = useState(false)
-  const [fileContent, setFileContent] = useState('')
+  const [isOpen, setIsOpen] = useState(false);
+  const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
 
   const openModal = () => {
-    setIsOpen(true)
-    setFileContent(row.original.systemDescription)
-  }
+    setIsOpen(true);
+  };
 
   const closeModal = () => {
-    setIsOpen(false)
-    // setFileContent('')
-  }
+    setIsOpen(false);
+  };
 
   const downloadFile = () => {
-    const element = document.createElement('a')
-    const file = new Blob([fileContent], { type: 'text/plain' })
-    element.href = URL.createObjectURL(file)
-    element.download =
-      row.original.submissionType +
-      '_SystemDescription_' +
-      row.original.fileName
-    document.body.appendChild(element)
-    element.click()
-    document.body.removeChild(element)
-  }
+    if (pdfBlob) {
+      const element = document.createElement('a');
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      element.href = pdfUrl;
+      element.download =
+        row.original.submissionType +
+        '_SystemDescription_' +
+        row.original.languageDirection;
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    }
+  };
+
+  useEffect(() => {
+    const bufferData = new Uint8Array(row.original.systemDescription.data);
+    const blob = new Blob([bufferData], { type: 'application/pdf' });
+    setPdfBlob(blob);
+  }, [row.original.systemDescription.data]);
 
   return (
     <>
@@ -708,17 +714,20 @@ export function ViewSystemDescription({ value, column, row }: any) {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <div className="relative mx-auto my-6 w-[60rem] max-w-md rounded-lg bg-white">
+              <div className="relative mx-auto my-6 w-[60rem] max-w-3xl rounded-lg bg-white">
                 <Dialog.Title className="mx-6 mt-4 text-lg font-bold">
                   System Description
                 </Dialog.Title>
-                {/* <div className="px-6 py-4">
-                  <p className="text-gray-800">{fileContent}</p>
-                </div> */}
                 <div className="whitespace-pre-line px-6 py-4 ">
-                  <p className="overflow-scroll whitespace-pre-line break-all text-gray-800 ">
-                    {fileContent}
-                  </p>
+                  {/* Display the PDF file using an <iframe> element */}
+                  {pdfBlob && (
+                    <iframe
+                      src={URL.createObjectURL(pdfBlob)}
+                      width="100%"
+                      height="400px"
+                      title="System Description"
+                    ></iframe>
+                  )}
                 </div>
                 <div className="flex items-center justify-between bg-gray-100 px-6 py-4">
                   <button
@@ -742,8 +751,14 @@ export function ViewSystemDescription({ value, column, row }: any) {
         </Dialog>
       </Transition.Root>
     </>
-  )
+  );
 }
+
+
+
+
+
+
 
 export function ViewPredictedFile({ value, column, row }: any) {
   const [isOpen, setIsOpen] = useState(false)
