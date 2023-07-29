@@ -67,7 +67,7 @@ export default function EvaluationForm() {
     },
     {
       id: 4,
-      name: 'Mizo-to-English',
+      name: 'Mizo-to-English', 
     },
     {
       id: 5,
