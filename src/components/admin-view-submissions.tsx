@@ -9,7 +9,7 @@ import Table, { CategoryCell, DeleteCell, DownloadPDFIngredient, SelectDateFilte
 import SelectSubmissionType from './select-submission-type';
 import SelectTranslationDirection from './select-translation-direction';
 const VITE_SERVERURL = import.meta.env.VITE_SERVERURL;
-
+axios.defaults.timeout=30000;
 const ViewSubmissionsAdmin = () => {
     const [submissions, setSubmissions] = useState<any[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -41,7 +41,7 @@ const ViewSubmissionsAdmin = () => {
             const response = await fetchSubmissionsAllPost();
             // const data = await response.json();
             console.log(response.data);
-            setSubmissions(response.data.results);
+            setSubmissions(response.data);
             setIsLoading(false);
         } catch (err: any | AxiosError) {
             if (err?.response?.status === 401) {
