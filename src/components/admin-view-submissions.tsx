@@ -235,10 +235,10 @@ const ViewSubmissionsAdmin = () => {
                 Header: "Submitted Output File",
                 Cell: ViewSelectedFile
             },
-            {
-                Header: "System Description",
-                Cell: ViewSystemDescription
-            },
+            // {
+            //     Header: "System Description",
+            //     Cell: ViewSystemDescription
+            // },
             {
                 Header: 'Delete',
                 Cell: DeleteCell
